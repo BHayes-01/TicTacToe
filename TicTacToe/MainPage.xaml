@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TicTacToe.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:TicTacToe.Views"
+    xmlns:viewModels="clr-namespace:TicTacToe.ViewModels"
+    x:DataType="viewModels:MainPageViewModel">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Label
+            FontSize="32"
+            HorizontalOptions="Center"
+            SemanticProperties.HeadingLevel="Level1"
+            Text="TIC-TAC-TOE"
+            VerticalOptions="End" />
+
+        <Grid Grid.Row="2" HorizontalOptions="Center">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="36" />
+                <ColumnDefinition Width="200" />
+            </Grid.ColumnDefinitions>
+
+            <CheckBox
+                Grid.Column="0"
+                IsChecked="{Binding TwoPlayer}"
+                VerticalOptions="Center" />
+            <Label
+                Grid.Column="1"
+                FontSize="24"
+                Text="Two Player?"
+                VerticalOptions="Center" />
+
+        </Grid>
+
+        <Grid Grid.Row="3" HorizontalOptions="Center">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="36" />
+                <ColumnDefinition Width="200" />
+            </Grid.ColumnDefinitions>
+
+            <CheckBox
+                Grid.Column="0"
+                IsChecked="False"
+                VerticalOptions="Center" />
+            <Label
+                Grid.Column="1"
+                FontSize="24"
+                Text="Computer Starts?"
+                VerticalOptions="Center" />
+
+        </Grid>
+
+        <Button
+            Grid.Row="5"
+            Command="{Binding StartClick}"
+            FontSize="32"
+            HorizontalOptions="Center"
+            Text="Start" />
+    </Grid>
+
+</ContentPage>
