@@ -59,25 +59,5 @@ namespace TicTacToe.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] o_piece {
-            get {
-                object obj = ResourceManager.GetObject("o_piece", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] x_piece {
-            get {
-                object obj = ResourceManager.GetObject("x_piece", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

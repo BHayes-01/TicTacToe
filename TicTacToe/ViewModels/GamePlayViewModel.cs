@@ -15,7 +15,7 @@ namespace TicTacToe.ViewModels
 
         #region Fields
 
-        internal XorO[] _board = new XorO[9];
+        internal static XorO[] _board = new XorO[9];
         private XorO _computerChoice;
         private bool _computerStarts;
         private bool _gameOver;
@@ -30,7 +30,17 @@ namespace TicTacToe.ViewModels
         private double _winningY1;
         private double _winningY2;
 
-        internal readonly List<int[]> _winningCombinations = new()
+        internal static readonly List<int[]> _choiceHeirarchy = new()
+        {
+            new[] { 0, 2, 6 },
+            new[] { 2, 8, 6 },
+            new[] { 0, 1, 3 },
+            new[] { 1, 2, 5 },
+            new[] { 5, 8, 7 },
+            new[] { 3, 6, 7 }
+        };
+
+        internal static readonly List<int[]> _winningCombinations = new()
         {
             new[] { 0, 1, 2 },
             new[] { 3, 4, 5 },
@@ -435,8 +445,7 @@ namespace TicTacToe.ViewModels
             {
                 if ((_board[threeChoices[1]] == XorO.None) && (_board[threeChoices[2]] == XorO.None))
                 {
-                    var rnd = new Random();
-                    int index = rnd.Next(2);  // randomly pick between the two choices
+                    int index = Random.Shared.Next(2);  // randomly pick between the two choices
                     return index == 0 ? 1 : 2;
                 }
 
@@ -451,8 +460,7 @@ namespace TicTacToe.ViewModels
             {
                 if ((_board[threeChoices[0]] == XorO.None) && (_board[threeChoices[2]] == XorO.None))
                 {
-                    var rnd = new Random();
-                    int index = rnd.Next(2);  // randomly pick between the two choices
+                    int index = Random.Shared.Next(2);  // randomly pick between the two choices
                     return index == 0 ? 0 : 2;
                 }
 
@@ -467,8 +475,7 @@ namespace TicTacToe.ViewModels
             {
                 if ((_board[threeChoices[0]] == XorO.None) && (_board[threeChoices[1]] == XorO.None))
                 {
-                    var rnd = new Random();
-                    int index = rnd.Next(2);  // randomly pick between the two choices
+                    int index = Random.Shared.Next(2);  // randomly pick between the two choices
                     return index == 0 ? 0 : 1;
                 }
 
@@ -506,17 +513,8 @@ namespace TicTacToe.ViewModels
         /// </remarks>
         internal int CheckForBestBlockingMove(XorO computerChoice)
         {
-            var choiceHeirarchy = new List<int[]> {
-                new[] { 0, 2, 6 },
-                new[] { 2, 8, 6 },
-                new[] { 0, 1, 3 },
-                new[] { 1, 2, 5 },
-                new[] { 5, 8, 7 },
-                new[] { 3, 6, 7 },
-                };
-
             // pick corner edge position if available
-            foreach (var threeInARow in choiceHeirarchy)
+            foreach (var threeInARow in _choiceHeirarchy)
             {
                 var open = CheckBestChoice(threeInARow, computerChoice);
                 if (open >= 0)
@@ -550,7 +548,7 @@ namespace TicTacToe.ViewModels
                     return 3;
             }
 
-            if ((_board[1] == opponentChoice || _board[2] == opponentChoice) 
+            if ((_board[1] == opponentChoice || _board[2] == opponentChoice)
                 && (_board[3] == opponentChoice || _board[6] == opponentChoice)
                 && _board[0] == XorO.None)
             {
@@ -597,8 +595,7 @@ namespace TicTacToe.ViewModels
                 || (LeftBottomChoice == XorO.None)
                 || (RightBottomChoice == XorO.None))
             {
-                var rnd = new Random();
-                int index = rnd.Next(4);  // randomly pick between the four choices
+                int index = Random.Shared.Next(4);  // randomly pick between the four choices
 
                 int open = -1;
                 while (open == -1)
@@ -857,8 +854,8 @@ namespace TicTacToe.ViewModels
             HasWinner = false;
             GameOver = false;
             WinningSelection = -1;
-            _computerChoice = XorO.X_Visible;
-            for (int i = 0; i < _board.Length; i++)
+            _computerChoice = ComputerStarts ? XorO.O_Visible : XorO.X_Visible;
+            for (int i = 0; i < _board.Count(); i++)
             {
                 _board[i] = XorO.None;
             }
@@ -874,6 +871,8 @@ namespace TicTacToe.ViewModels
             OnPropertyChanged(nameof(RightBottomChoice));
 
             UpdateInstructions();
+
+            CheckIfComputerPlay();
         }
 
         /// <summary>

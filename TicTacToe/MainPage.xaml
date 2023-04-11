@@ -7,6 +7,16 @@
     xmlns:viewModels="clr-namespace:TicTacToe.ViewModels"
     x:DataType="viewModels:MainPageViewModel">
 
+    <Shell.TitleView>
+        <StackLayout>
+            <Button
+                Command="{Binding AboutClick}"
+                FontSize="14"
+                HorizontalOptions="End"
+                Text="About" />
+        </StackLayout>
+    </Shell.TitleView>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70" />
@@ -53,7 +63,7 @@
 
             <CheckBox
                 Grid.Column="0"
-                IsChecked="False"
+                IsChecked="{Binding ComputerStarts}"
                 VerticalOptions="Center" />
             <Label
                 Grid.Column="1"

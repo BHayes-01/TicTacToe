@@ -24,12 +24,18 @@ namespace TicTacToe.ViewModels
         /// </summary>
         public MainPageViewModel()
         {
+            AboutClick = new RelayCommand(NavigateToAboutView);
             StartClick = new RelayCommand(NavigateToGamePlayView);
         }
 
         #endregion Constructor
 
         #region Relay Commands
+
+        /// <summary>
+        /// Handles the button "About" click.
+        /// </summary>
+        public ICommand AboutClick { private set; get; }
 
         /// <summary>
         /// Handles the button "Start" click.
@@ -56,6 +62,21 @@ namespace TicTacToe.ViewModels
         {
             get => _twoPlayer;
             set => SetProperty(ref _twoPlayer, value);
+        }
+
+        /// <summary>
+        /// Navigate to the about view
+        /// </summary>
+        public async void NavigateToAboutView()
+        {
+            try
+            {
+                await Shell.Current.GoToAsync($"{nameof(AboutView)}");
+            }
+            catch
+            {
+                throw new InvalidOperationException($"Unable to resolve type {nameof(AboutView)}");
+            }
         }
 
         /// <summary>
