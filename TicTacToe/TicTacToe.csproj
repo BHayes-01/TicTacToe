@@ -37,7 +37,7 @@
 		<AssemblyVersion>1.0.0</AssemblyVersion>
 		<FileVersion>1.0.0</FileVersion>
 		<NeutralLanguage>en</NeutralLanguage>
-		<Authors>Charles Hayes</Authors>
+		<Authors>Charles B. Hayes</Authors>
 		<Product>TicTacToe</Product>
 	</PropertyGroup>
 
@@ -87,6 +87,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\AppIcon\appiconfg.svg" />
 	  <None Remove="Resources\Images\dotnet_bot.svg" />
 	  <None Remove="Resources\Images\ticTacTow_Large.png" />
 	  <None Remove="Resources\Images\ticTacTow_Medium.png" />

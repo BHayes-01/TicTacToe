@@ -64,6 +64,6 @@ namespace TicTacToeUnitTests.ViewModels
             Assert.True(cmd.GetType() == typeof(RelayCommand));
         }
 
-
     }
+
 }

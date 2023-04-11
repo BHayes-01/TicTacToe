@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
 using TicTacToe.Views;
 using TicTacToe.ViewModels;
 

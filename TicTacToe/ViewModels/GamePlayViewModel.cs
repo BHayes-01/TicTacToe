@@ -15,7 +15,7 @@ namespace TicTacToe.ViewModels
 
         #region Fields
 
-        internal static XorO[] _board = new XorO[9];
+        internal XorO[] _board = new XorO[9];
         private XorO _computerChoice;
         private bool _computerStarts;
         private bool _gameOver;
@@ -30,7 +30,7 @@ namespace TicTacToe.ViewModels
         private double _winningY1;
         private double _winningY2;
 
-        internal static readonly List<int[]> _choiceHeirarchy = new()
+        internal readonly List<int[]> _choiceHeirarchy = new()
         {
             new[] { 0, 2, 6 },
             new[] { 2, 8, 6 },
@@ -40,7 +40,7 @@ namespace TicTacToe.ViewModels
             new[] { 3, 6, 7 }
         };
 
-        internal static readonly List<int[]> _winningCombinations = new()
+        internal readonly List<int[]> _winningCombinations = new()
         {
             new[] { 0, 1, 2 },
             new[] { 3, 4, 5 },
