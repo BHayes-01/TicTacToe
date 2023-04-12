@@ -5,79 +5,74 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewModels="clr-namespace:TicTacToe.ViewModels"
     x:DataType="viewModels:AboutViewModel">
-        <VerticalStackLayout HorizontalOptions="Center"  VerticalOptions="Center">
+    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
 
-            <Label
-                Margin="0,6"
-                FontSize="32"
-                HorizontalOptions="Center"
-                SemanticProperties.HeadingLevel="Level1"
-                Text="TIC-TAC-TOE" />
+        <Label
+            Margin="0,6"
+            FontSize="32"
+            HorizontalOptions="Center"
+            SemanticProperties.HeadingLevel="Level1"
+            Text="TIC-TAC-TOE" />
 
-            <Image
-                Margin="0,6"
-                HeightRequest="200"
-                HorizontalOptions="Center"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                Source="dotnet_bot.png" />
+        <Image
+            Margin="0,6"
+            HeightRequest="200"
+            HorizontalOptions="Center"
+            SemanticProperties.Description="Cute dot net bot waving hi to you!"
+            Source="dotnet_bot.png" />
 
-            <Label
-                Margin="0,6"
-                FontSize="16"
-                HorizontalOptions="Center"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                SemanticProperties.HeadingLevel="Level2"
-                Text="A .NET Multi-platform App UI" />
+        <Label
+            Margin="0,6"
+            FontSize="16"
+            SemanticProperties.Description="Welcome to dot net Multi platform App U I"
+            SemanticProperties.HeadingLevel="Level2"
+            Text="A .NET Multi-platform App UI" />
 
-            <Label
-                Margin="0,2"
-                FontSize="14"
-                Text="Author and Owner: Charles B. Hayes" />
+        <Label
+            Margin="0,2"
+            FontSize="14"
+            Text="{Binding Author, StringFormat='Created By: {0}'}" />
 
-            <Label
-                Margin="0,2"
-                FontSize="14"
-                Text="{Binding Version, StringFormat='Version: {0}'}" />
+        <Label
+            Margin="0,2"
+            FontSize="14"
+            Text="{Binding Version, StringFormat='Version: {0}'}" />
 
-            <Label
-                Margin="0,2"
-                FontSize="14"
-                Text="Date Published: April 12, 2023" />
+        <Label
+            Margin="0,2"
+            FontSize="14"
+            Text="Date Published: April 2023" />
 
-            <Label Margin="0,2" FontSize="14">
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="License: " />
-                        <Span
-                            Text="MIT"
-                            TextColor="Blue"
-                            TextDecorations="Underline" />
-                    </FormattedString>
-                </Label.FormattedText>
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer 
-                        Command="{Binding LicenseClick}" 
-                        CommandParameter="https://licenses.nuget.org/MIT" />
-                </Label.GestureRecognizers>
-            </Label>
+        <Label Margin="0,2" FontSize="14">
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span Text="License: " />
+                    <Span
+                        Text="MIT"
+                        TextColor="Blue"
+                        TextDecorations="Underline" />
+                </FormattedString>
+            </Label.FormattedText>
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding LicenseClick}" CommandParameter="https://licenses.nuget.org/MIT" />
+            </Label.GestureRecognizers>
+        </Label>
 
-            <Label Margin="0,2" FontSize="14">
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Project URL: " />
-                        <Span
-                            Text="GITHUB"
-                            TextColor="Blue"
-                            TextDecorations="Underline" />
-                    </FormattedString>
-                </Label.FormattedText>
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer 
-                        Command="{Binding LicenseClick}" 
-                        CommandParameter="https://github.com/BHayes-01/TicTacToe" />
-                </Label.GestureRecognizers>
-            </Label>
+        <Label Margin="0,2" FontSize="14">
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span Text="Project URL: " />
+                    <Span
+                        Text="GITHUB"
+                        TextColor="Blue"
+                        TextDecorations="Underline" />
+                </FormattedString>
+            </Label.FormattedText>
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding LicenseClick}" CommandParameter="https://github.com/BHayes-01/TicTacToe" />
+            </Label.GestureRecognizers>
+        </Label>
 
-        </VerticalStackLayout>
+    </VerticalStackLayout>
 
 </ContentPage>

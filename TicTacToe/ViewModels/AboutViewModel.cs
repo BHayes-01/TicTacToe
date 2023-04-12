@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using System.Reflection;
 using System.Windows.Input;
 
 namespace TicTacToe.ViewModels
@@ -22,9 +23,14 @@ namespace TicTacToe.ViewModels
         #region Properties
 
         /// <summary>
+        /// Get the author's name
+        /// </summary>
+        public string Author => "Charles B. Hayes";
+
+        /// <summary>
         /// Return the current version number
         /// </summary>
-        public string Version => System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        public string Version => Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         #endregion Properties
 
