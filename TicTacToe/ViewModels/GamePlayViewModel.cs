@@ -892,8 +892,8 @@ namespace TicTacToe.ViewModels
         /// <param name="height">Height of the form.</param>
         internal void SizeChanged(double width, double height)
         {
-            GridSize = Math.Min(width - 24, height - 120.0);
-            TopRowHeight = height > 700 ? 70.0 : 0.0;
+            TopRowHeight = height > 500 ? 70.0 : 0.0;
+            GridSize = Math.Min(width - 24, height - 50.0 - TopRowHeight);
             UpdateWinningLine();
         }
 

@@ -24,8 +24,7 @@
             FontSize="32"
             HorizontalOptions="Center"
             SemanticProperties.HeadingLevel="Level1"
-            Text="TIC-TAC-TOE"
-            VerticalOptions="End" />
+            Text="TIC-TAC-TOE" />
 
         <Label
             Grid.Row="1"
@@ -35,8 +34,8 @@
 
         <VerticalStackLayout
             Grid.Row="3"
-            HorizontalOptions="CenterAndExpand"
-            VerticalOptions="CenterAndExpand">
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
 
             <Grid
                 HeightRequest="{Binding GridSize, Mode=TwoWay}"
