@@ -23,13 +23,14 @@ namespace TicTacToe.ViewModels
         private bool _hasWinner;
         private string _instructions;
         private bool _isX;
+        private double _topRowHeight;
         private bool _twoPlayer;
         private int _winningSelection;
         private double _winningX1;
         private double _winningX2;
         private double _winningY1;
         private double _winningY2;
-
+        
         internal readonly List<int[]> _choiceHeirarchy = new()
         {
             new[] { 0, 2, 6 },
@@ -365,6 +366,15 @@ namespace TicTacToe.ViewModels
                 if (!_isX && (_computerChoice == XorO.X_Visible)) return false;
                 return true;
             }
+        }
+
+        /// <summary>
+        /// Used to hide the Title if the height is too small
+        /// </summary>
+        public double TopRowHeight
+        {
+            get => _topRowHeight;
+            set => SetProperty(ref _topRowHeight, value);
         }
 
         /// <summary>
@@ -883,6 +893,7 @@ namespace TicTacToe.ViewModels
         internal void SizeChanged(double width, double height)
         {
             GridSize = Math.Min(width - 24, height - 120.0);
+            TopRowHeight = height > 700 ? 70.0 : 0.0;
             UpdateWinningLine();
         }
 
