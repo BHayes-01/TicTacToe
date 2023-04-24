@@ -63,63 +63,63 @@
                 <customControls:SquareControl
                     Grid.Row="0"
                     Grid.Column="0"
-                    XorO_Command="{Binding LeftTopClick}"
+                    XorO_Command="{Binding LeftTopClickCommand}"
                     XorO_Value="{Binding LeftTopChoice}" />
 
                 <!--  TOP MIDDLE  -->
                 <customControls:SquareControl
                     Grid.Row="0"
                     Grid.Column="2"
-                    XorO_Command="{Binding CenterTopClick}"
+                    XorO_Command="{Binding CenterTopClickCommand}"
                     XorO_Value="{Binding CenterTopChoice}" />
 
                 <!--  TOP RIGHT  -->
                 <customControls:SquareControl
                     Grid.Row="0"
                     Grid.Column="4"
-                    XorO_Command="{Binding RightTopClick}"
+                    XorO_Command="{Binding RightTopClickCommand}"
                     XorO_Value="{Binding RightTopChoice}" />
 
                 <!--  MIDDLE LEFT  -->
                 <customControls:SquareControl
                     Grid.Row="2"
                     Grid.Column="0"
-                    XorO_Command="{Binding LeftMiddleClick}"
+                    XorO_Command="{Binding LeftMiddleClickCommand}"
                     XorO_Value="{Binding LeftMiddleChoice}" />
 
                 <!--  CENTER  -->
                 <customControls:SquareControl
                     Grid.Row="2"
                     Grid.Column="2"
-                    XorO_Command="{Binding CenterMiddleClick}"
+                    XorO_Command="{Binding CenterMiddleClickCommand}"
                     XorO_Value="{Binding CenterMiddleChoice}" />
 
                 <!--  MIDDLE RIGHT  -->
                 <customControls:SquareControl
                     Grid.Row="2"
                     Grid.Column="4"
-                    XorO_Command="{Binding RightMiddleClick}"
+                    XorO_Command="{Binding RightMiddleClickCommand}"
                     XorO_Value="{Binding RightMiddleChoice}" />
 
                 <!--  BOTTOM LEFT  -->
                 <customControls:SquareControl
                     Grid.Row="4"
                     Grid.Column="0"
-                    XorO_Command="{Binding LeftBottomClick}"
+                    XorO_Command="{Binding LeftBottomClickCommand}"
                     XorO_Value="{Binding LeftBottomChoice}" />
 
                 <!--  BOTTOM MIDDLE  -->
                 <customControls:SquareControl
                     Grid.Row="4"
                     Grid.Column="2"
-                    XorO_Command="{Binding CenterBottomClick}"
+                    XorO_Command="{Binding CenterBottomClickCommand}"
                     XorO_Value="{Binding CenterBottomChoice}" />
 
                 <!--  BOTTOM RIGHT  -->
                 <customControls:SquareControl
                     Grid.Row="4"
                     Grid.Column="4"
-                    XorO_Command="{Binding RightBottomClick}"
+                    XorO_Command="{Binding RightBottomClickCommand}"
                     XorO_Value="{Binding RightBottomChoice}" />
 
                 <!--  CHECKER GRID  -->
@@ -175,12 +175,12 @@
 
             <Button
                 Margin="12"
-                Command="{Binding PlayAgainClick}"
+                Command="{Binding PlayAgainClickCommand}"
                 FontSize="24"
                 Text="Play Again" />
             <Button
                 Margin="12"
-                Command="{Binding QuitClick}"
+                Command="{Binding QuitClickCommand}"
                 FontSize="24"
                 Text="Quit" />
 

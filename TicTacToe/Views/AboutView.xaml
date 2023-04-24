@@ -66,25 +66,7 @@
                     </FormattedString>
                 </Label.FormattedText>
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding LicenseClick}" CommandParameter="https://licenses.nuget.org/MIT" />
-                </Label.GestureRecognizers>
-            </Label>
-
-            <Label
-                Margin="0,2"
-                FontSize="14"
-                HorizontalOptions="Center">
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Project URL: " />
-                        <Span
-                            Text="GITHUB"
-                            TextColor="Blue"
-                            TextDecorations="Underline" />
-                    </FormattedString>
-                </Label.FormattedText>
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding LicenseClick}" CommandParameter="https://github.com/BHayes-01/TicTacToe" />
+                    <TapGestureRecognizer Command="{Binding UrlClickCommand}" CommandParameter="https://licenses.nuget.org/MIT" />
                 </Label.GestureRecognizers>
             </Label>
 

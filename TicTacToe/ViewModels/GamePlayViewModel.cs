@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Web;
@@ -8,29 +9,17 @@ namespace TicTacToe.ViewModels
 {
     /// <summary>
     /// This view model is used to handle game play.
-    /// This includes the discission made by the computer.
+    /// This includes the decision made by the computer.
     /// </summary>
-    public class GamePlayViewModel : BaseViewModel, IQueryAttributable
+    public partial class GamePlayViewModel : ObservableObject, IQueryAttributable
     {
 
         #region Fields
 
         internal XorO[] _board = new XorO[9];
         private XorO _computerChoice;
-        private bool _computerStarts;
-        private bool _gameOver;
-        private double _gridSize;
-        private bool _hasWinner;
-        private string _instructions;
         private bool _isX;
-        private double _topRowHeight;
-        private bool _twoPlayer;
-        private int _winningSelection;
-        private double _winningX1;
-        private double _winningX2;
-        private double _winningY1;
-        private double _winningY2;
-        
+
         internal readonly List<int[]> _choiceHeirarchy = new()
         {
             new[] { 0, 2, 6 },
@@ -58,25 +47,6 @@ namespace TicTacToe.ViewModels
         #region Constructor
 
         /// <summary>
-        /// Creates a new instance of the game play view model.
-        /// Sets up the relay commands.
-        /// </summary>
-        public GamePlayViewModel()
-        {
-            LeftTopClick = new RelayCommand(() => { LeftTopChoice = PickSquare(LeftTopChoice); });
-            CenterTopClick = new RelayCommand(() => { CenterTopChoice = PickSquare(CenterTopChoice); });
-            RightTopClick = new RelayCommand(() => { RightTopChoice = PickSquare(RightTopChoice); });
-            LeftMiddleClick = new RelayCommand(() => { LeftMiddleChoice = PickSquare(LeftMiddleChoice); });
-            CenterMiddleClick = new RelayCommand(() => { CenterMiddleChoice = PickSquare(CenterMiddleChoice); });
-            RightMiddleClick = new RelayCommand(() => { RightMiddleChoice = PickSquare(RightMiddleChoice); });
-            LeftBottomClick = new RelayCommand(() => { LeftBottomChoice = PickSquare(LeftBottomChoice); });
-            CenterBottomClick = new RelayCommand(() => { CenterBottomChoice = PickSquare(CenterBottomChoice); });
-            RightBottomClick = new RelayCommand(() => { RightBottomChoice = PickSquare(RightBottomChoice); });
-            PlayAgainClick = new RelayCommand(Reset);
-            QuitClick = new RelayCommand(Quit);
-        }
-
-        /// <summary>
         /// This method is supposed to get the parameter arguments that are passed in from the main start page.
         /// </summary>
         /// <param name="query"></param>
@@ -95,75 +65,190 @@ namespace TicTacToe.ViewModels
             else if (bool.TryParse(HttpUtility.UrlDecode((query[nameof(ComputerStarts)] ?? string.Empty).ToString()), out bool computerStarts))
                 ComputerStarts = computerStarts;
 
-            Reset();
+            PlayAgainClick();
         }
 
         #endregion Constructor
 
-        #region Tic-Tac-Tow Square Relay Commands
+        #region Auto Properties From Fields
+
+        /// <summary>
+        /// Indicates if the computer starts
+        /// </summary>
+        [ObservableProperty]
+        private bool _computerStarts;
+
+        /// <summary>
+        /// Indicates that the game is over
+        /// </summary>
+        [ObservableProperty]
+        private bool _gameOver;
+
+        /// <summary>
+        /// The size of the tic-tac-toe board, the width and height needs to be the same
+        /// </summary>
+        [ObservableProperty]
+        private double _gridSize;
+
+        /// <summary>
+        /// Indicates that the game has a winner, versus a tie
+        /// </summary>
+        [ObservableProperty]
+        private bool _hasWinner;
+
+        /// <summary>
+        /// Brief description of next step that is displayed
+        /// </summary>
+        [ObservableProperty]
+        private string _instructions;
+
+        /// <summary>
+        /// Used to hide the Title if the height is too small
+        /// </summary>
+        [ObservableProperty]
+        private double _topRowHeight;
+
+        /// <summary>
+        /// Indicates if it is a two player game; otherwise, one player
+        /// </summary>
+        [ObservableProperty]
+        private bool _twoPlayer;
+
+        /// <summary>
+        /// Indicates that a winning combination has been found
+        /// </summary>
+        [ObservableProperty]
+        private int _winningSelection;
+
+        /// <summary>
+        /// Handles the location of the winning line (X1, Y1) - (X2 - Y2).
+        /// </summary>
+        [ObservableProperty]
+        private double _winningX1;
+
+        /// <summary>
+        /// Handles the location of the winning line (X1, Y1) - (X2 - Y2).
+        /// </summary>
+        [ObservableProperty]
+        private double _winningX2;
+
+        /// <summary>
+        /// Handles the location of the winning line (X1, Y1) - (X2 - Y2).
+        /// </summary>
+        [ObservableProperty]
+        private double _winningY1;
+
+        /// <summary>
+        /// Handles the location of the winning line (X1, Y1) - (X2 - Y2).
+        /// </summary>
+        [ObservableProperty]
+        private double _winningY2;
+
+        #endregion Auto Properties From Fields
+
+        #region Tic-Tac-Toe Square Auto Generated Relay Commands
 
         /// <summary>
         /// [0] Handles the click event for the left side top square
         /// </summary>
-        public IRelayCommand LeftTopClick { private set; get; }
+        [RelayCommand]
+        internal void LeftTopClick() { LeftTopChoice = PickSquare(LeftTopChoice); }
 
         /// <summary>
         /// [1] Handles the click event for the center top square
         /// </summary>
-        public IRelayCommand CenterTopClick { private set; get; }
+        [RelayCommand]
+        internal void CenterTopClick() { CenterTopChoice = PickSquare(CenterTopChoice); }
 
         /// <summary>
         /// [2] Handles the click event for the right side top square
         /// </summary>
-        public IRelayCommand RightTopClick { private set; get; }
+        [RelayCommand]
+        internal void RightTopClick() { RightTopChoice = PickSquare(RightTopChoice); }
 
         /// <summary>
         /// [3] Handles the click event for the left side middle square
         /// </summary>
-        public IRelayCommand LeftMiddleClick { private set; get; }
+        [RelayCommand]
+        internal void LeftMiddleClick() { LeftMiddleChoice = PickSquare(LeftMiddleChoice); }
 
         /// <summary>
         /// [4] Handles the click event for the center square
         /// </summary>
-        public IRelayCommand CenterMiddleClick { private set; get; }
+        [RelayCommand]
+        internal void CenterMiddleClick() { CenterMiddleChoice = PickSquare(CenterMiddleChoice); }
 
         /// <summary>
         /// [5] Handles the click event for the right side middle square
         /// </summary>
-        public IRelayCommand RightMiddleClick { private set; get; }
+        [RelayCommand]
+        internal void RightMiddleClick() { RightMiddleChoice = PickSquare(RightMiddleChoice); }
 
         /// <summary>
         /// [6] Handles the click event for the left side bottom square
         /// </summary>
-        public IRelayCommand LeftBottomClick { private set; get; }
+        [RelayCommand]
+        internal void LeftBottomClick() { LeftBottomChoice = PickSquare(LeftBottomChoice); }
 
         /// <summary>
         /// [7] Handles the click event for the center bottom square
         /// </summary>
-        public IRelayCommand CenterBottomClick { private set; get; }
+        [RelayCommand]
+        internal void CenterBottomClick() { CenterBottomChoice = PickSquare(CenterBottomChoice); }
 
         /// <summary>
         /// [8] Handles the click event for the right side bottom square
         /// </summary>
-        public IRelayCommand RightBottomClick { private set; get; }
+        [RelayCommand]
+        internal void RightBottomClick() { RightBottomChoice = PickSquare(RightBottomChoice); }
 
-        #endregion Tic-Tac-Tow Square Relay Commands
+        #endregion Tic-Tac-Toe Square Relay Commands
 
-        #region Button Relay Commands
-
-        /// <summary>
-        /// Handles the click event for the play again button
-        /// </summary>
-        public IRelayCommand PlayAgainClick { private set; get; }
+        #region Auto Relay Commands from Methods
 
         /// <summary>
-        /// Handles the click event for the quit button
+        /// PlayAgainClick to default values
         /// </summary>
-        public IRelayCommand QuitClick { private set; get; }
+        [RelayCommand]
+        internal void PlayAgainClick()
+        {
+            _isX = false;
+            HasWinner = false;
+            GameOver = false;
+            WinningSelection = -1;
+            _computerChoice = ComputerStarts ? XorO.O_Visible : XorO.X_Visible;
+            for (int i = 0; i < _board.Count(); i++)
+            {
+                _board[i] = XorO.None;
+            }
 
-        #endregion Button Relay Commands
+            OnPropertyChanged(nameof(LeftTopChoice));
+            OnPropertyChanged(nameof(CenterTopChoice));
+            OnPropertyChanged(nameof(RightTopChoice));
+            OnPropertyChanged(nameof(LeftMiddleChoice));
+            OnPropertyChanged(nameof(CenterMiddleChoice));
+            OnPropertyChanged(nameof(RightMiddleChoice));
+            OnPropertyChanged(nameof(LeftBottomChoice));
+            OnPropertyChanged(nameof(CenterBottomChoice));
+            OnPropertyChanged(nameof(RightBottomChoice));
 
-        #region Tic-Tac-Tow Square Properties
+            UpdateInstructions();
+
+            CheckIfComputerPlay();
+        }
+
+        /// <summary>
+        /// Exit the program
+        /// </summary>
+        [RelayCommand]
+        internal void QuitClick()
+        {
+            Environment.Exit(0);
+        }
+
+        #endregion Auto Relay Commands from Methods
+
+        #region Tic-Tac-Toe Square Properties
 
         /// <summary>
         /// [0] The current value of the left side top square
@@ -309,51 +394,9 @@ namespace TicTacToe.ViewModels
             }
         }
 
-        #endregion Tic-Tac-Tow Square Properties
+        #endregion Tic-Tac-Toe Square Properties
 
         #region Properties
-
-        /// <summary>
-        /// Indicates if the computer starts
-        /// </summary>
-        public bool ComputerStarts
-        {
-            get => _computerStarts;
-            set => SetProperty(ref _computerStarts, value);
-        }
-
-        /// <summary>
-        /// Indicates that the game is over
-        /// </summary>
-        public bool GameOver
-        {
-            get => _gameOver;
-            set => SetProperty(ref _gameOver, value);
-        }
-
-        /// <summary>
-        /// The size of the tic-tac-toe board, the width and height needs to be the same
-        /// </summary>
-        public double GridSize
-        {
-            get => _gridSize;
-            set => SetProperty(ref _gridSize, value);
-        }
-
-        public bool HasWinner
-        {
-            get => _hasWinner;
-            set => SetProperty(ref _hasWinner, value);
-        }
-
-        /// <summary>
-        /// Brief description of next step that is displayed
-        /// </summary>
-        public string Instructions
-        {
-            get => _instructions;
-            set => SetProperty(ref _instructions, value);
-        }
 
         /// <summary>
         /// Indicates if the current turn belongs to the computer
@@ -366,69 +409,6 @@ namespace TicTacToe.ViewModels
                 if (!_isX && (_computerChoice == XorO.X_Visible)) return false;
                 return true;
             }
-        }
-
-        /// <summary>
-        /// Used to hide the Title if the height is too small
-        /// </summary>
-        public double TopRowHeight
-        {
-            get => _topRowHeight;
-            set => SetProperty(ref _topRowHeight, value);
-        }
-
-        /// <summary>
-        /// Indicates if it is a two player game; otherwise, one player
-        /// </summary>
-        public bool TwoPlayer
-        {
-            get => _twoPlayer;
-            set => SetProperty(ref _twoPlayer, value);
-        }
-
-        /// <summary>
-        /// Indicates that a winning combination has been found
-        /// </summary>
-        public int WinningSelection
-        {
-            get => _winningSelection;
-            set => SetProperty(ref _winningSelection, value);
-        }
-
-        /// <summary>
-        /// Handles the location of the winning line (X1, Y1) - (X2 - Y2).
-        /// </summary>
-        public double WinningX1
-        {
-            get => _winningX1;
-            set => SetProperty(ref _winningX1, value);
-        }
-
-        /// <summary>
-        /// Handles the location of the winning line (X1, Y1) - (X2 - Y2).
-        /// </summary>
-        public double WinningX2
-        {
-            get => _winningX2;
-            set => SetProperty(ref _winningX2, value);
-        }
-
-        /// <summary>
-        /// Handles the location of the winning line (X1, Y1) - (X2 - Y2).
-        /// </summary>
-        public double WinningY1
-        {
-            get => _winningY1;
-            set => SetProperty(ref _winningY1, value);
-        }
-
-        /// <summary>
-        /// Handles the location of the winning line (X1, Y1) - (X2 - Y2).
-        /// </summary>
-        public double WinningY2
-        {
-            get => _winningY2;
-            set => SetProperty(ref _winningY2, value);
         }
 
         #endregion Properties
@@ -648,12 +628,61 @@ namespace TicTacToe.ViewModels
 
             if (!GameOver)
             {
-                var isTie = _board.All(o => o != XorO.None);
-                if (isTie)
-                {
-                    GameOver = true;
-                    Instructions = "Tie";
-                }
+                //var count = _board.Count(o => o == XorO.None);
+
+                //if (count <= 1)
+                //{
+                    var isTie = _board.All(o => o != XorO.None);
+                    if (isTie)
+                    {
+                        // all possible moved made, so game is a tie.
+                        GameOver = true;
+                        Instructions = "Tie";
+                    }
+                    //else
+                    //{
+                    //    // one move left, if it is not a possible winning move end early.
+                    //    bool canWin = false;
+
+                    //    var _board2 = new XorO[_board.Length];
+                    //    Array.Copy(_board, _board2, _board2.Length);
+
+                    //    for (int j = 0; j < _board2.Length; j++)
+                    //    {
+                    //        if (_board2[j] == XorO.None)
+                    //        {
+                    //            _board2[j] = _isX ? XorO.X_Visible : XorO.O_Visible;
+                    //            break;
+                    //        }
+                    //    }
+
+                    //    foreach (var threeInARow in _winningCombinations)
+                    //    {
+                    //        if ((_board2[threeInARow[0]] == _board2[threeInARow[1]] && _board2[threeInARow[0]] == _board2[threeInARow[2]]))
+                    //        {
+                    //            canWin = true;
+                    //            break;
+                    //        }
+                    //    }
+
+                    //    if (!canWin)
+                    //    {
+                    //        for (int j = 0; j < _board.Length; j++)
+                    //        {
+                    //            if (_board[j] == XorO.None)
+                    //            {
+                    //                Play(j);
+                    //                break;
+                    //            }
+                    //        }
+
+                    //        GameOver = true;
+                    //        Instructions = "Tie";
+                    //    }
+
+                    //}
+
+                //}
             }
         }
 
@@ -779,7 +808,7 @@ namespace TicTacToe.ViewModels
         /// <summary>
         /// Sets the square based on the computer's choice.
         /// </summary>
-        /// <param name="choice">An integer that represents a tic-tac-tow square position.</param>
+        /// <param name="choice">An integer that represents a tic-tac-toe square position.</param>
         /// <remarks>
         ///  0 | 1 | 2
         ///  ---------
@@ -845,44 +874,6 @@ namespace TicTacToe.ViewModels
                         break;
                     }
             }
-        }
-
-        /// <summary>
-        /// Exit the program
-        /// </summary>
-        internal void Quit()
-        {
-            Environment.Exit(0);
-        }
-
-        /// <summary>
-        /// Reset to default values
-        /// </summary>
-        internal void Reset()
-        {
-            _isX = false;
-            HasWinner = false;
-            GameOver = false;
-            WinningSelection = -1;
-            _computerChoice = ComputerStarts ? XorO.O_Visible : XorO.X_Visible;
-            for (int i = 0; i < _board.Count(); i++)
-            {
-                _board[i] = XorO.None;
-            }
-
-            OnPropertyChanged(nameof(LeftTopChoice));
-            OnPropertyChanged(nameof(CenterTopChoice));
-            OnPropertyChanged(nameof(RightTopChoice));
-            OnPropertyChanged(nameof(LeftMiddleChoice));
-            OnPropertyChanged(nameof(CenterMiddleChoice));
-            OnPropertyChanged(nameof(RightMiddleChoice));
-            OnPropertyChanged(nameof(LeftBottomChoice));
-            OnPropertyChanged(nameof(CenterBottomChoice));
-            OnPropertyChanged(nameof(RightBottomChoice));
-
-            UpdateInstructions();
-
-            CheckIfComputerPlay();
         }
 
         /// <summary>

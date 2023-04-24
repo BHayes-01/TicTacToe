@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Windows.Input;
 using TicTacToe.Enums;
 
@@ -13,19 +14,19 @@ public partial class SquareControl : ContentView
     /// Initializes the user control
     /// </summary>
 	public SquareControl()
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
     }
 
     /// <summary>
     /// Defines the bindable command to handle the click event.
     /// </summary>
 	public static readonly BindableProperty XorO_ValueProperty = BindableProperty.Create(
-		propertyName: nameof(XorO_Value),
-		returnType: typeof(XorO),
-		declaringType: typeof(SquareControl),
-		defaultValue: XorO.None,
-		defaultBindingMode: BindingMode.OneWay);
+        propertyName: nameof(XorO_Value),
+        returnType: typeof(XorO),
+        declaringType: typeof(SquareControl),
+        defaultValue: XorO.None,
+        defaultBindingMode: BindingMode.OneWay);
 
     /// <summary>
     /// Defines the bindable property of the squares current value
@@ -49,10 +50,10 @@ public partial class SquareControl : ContentView
     /// <summary>
     /// The current value of the square
     /// </summary>
-    public XorO XorO_Value 
-	{
-		get => (XorO)GetValue(XorO_ValueProperty); 
-		set => SetValue(XorO_ValueProperty, value);
-	}
+    public XorO XorO_Value
+    {
+        get => (XorO)GetValue(XorO_ValueProperty);
+        set => SetValue(XorO_ValueProperty, value);
+    }
 
 }

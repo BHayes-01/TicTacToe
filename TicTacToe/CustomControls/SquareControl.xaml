@@ -13,21 +13,23 @@
 
     <Grid>
         <Line
-            HorizontalOptions="Fill"
+            HorizontalOptions="CenterAndExpand"
             IsVisible="{Binding XorO_Value, Source={RelativeSource AncestorType={x:Type customControls:SquareControl}}, Converter={StaticResource EnumBoolConverter}, ConverterParameter=X_Visible}"
+            Scale="0.9"
             Stroke="{StaticResource MyRed}"
             StrokeThickness="4"
-            VerticalOptions="Fill"
+            VerticalOptions="CenterAndExpand"
             X1="0"
             X2="{Binding Path=Width, Source={RelativeSource AncestorType={x:Type Grid}}}"
             Y1="0"
             Y2="{Binding Path=Width, Source={RelativeSource AncestorType={x:Type Grid}}}" />
         <Line
-            HorizontalOptions="Fill"
+            HorizontalOptions="CenterAndExpand"
             IsVisible="{Binding XorO_Value, Source={RelativeSource AncestorType={x:Type customControls:SquareControl}}, Converter={StaticResource EnumBoolConverter}, ConverterParameter=X_Visible}"
+            Scale="0.9"
             Stroke="{StaticResource MyRed}"
             StrokeThickness="4"
-            VerticalOptions="Fill"
+            VerticalOptions="CenterAndExpand"
             X1="0"
             X2="{Binding Path=Width, Source={RelativeSource AncestorType={x:Type Grid}}}"
             Y1="{Binding Path=Width, Source={RelativeSource AncestorType={x:Type Grid}}}"

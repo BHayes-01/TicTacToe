@@ -57,7 +57,7 @@ namespace TicTacToeUnitTests.ViewModels
             var vm = new MainPageViewModel();
 
             // act
-            var cmd = vm.StartClick;   // test relay command
+            var cmd = vm.StartClickCommand;   // test relay command
 
             //assert
             Assert.NotNull(cmd);

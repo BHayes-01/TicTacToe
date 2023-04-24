@@ -1,5 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using System.Windows.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using TicTacToe.Views;
 
 namespace TicTacToe.ViewModels
@@ -7,67 +7,32 @@ namespace TicTacToe.ViewModels
     /// <summary>
     /// This is the main page or start page
     /// </summary>
-    public class MainPageViewModel : BaseViewModel
+    public partial class MainPageViewModel : ObservableObject
     {
 
-        #region Fields
-
-        private bool _twoPlayer;
-        private bool _computerStarts;
-
-        #endregion Fields
-
-        #region Constructor
-
-        /// <summary>
-        /// Constructor for the main page
-        /// </summary>
-        public MainPageViewModel()
-        {
-            AboutClick = new RelayCommand(NavigateToAboutView);
-            StartClick = new RelayCommand(NavigateToGamePlayView);
-        }
-
-        #endregion Constructor
-
-        #region Relay Commands
-
-        /// <summary>
-        /// Handles the button "About" click.
-        /// </summary>
-        public ICommand AboutClick { private set; get; }
-
-        /// <summary>
-        /// Handles the button "Start" click.
-        /// </summary>
-        public ICommand StartClick { private set; get; }
-
-        #endregion Relay Commands
-
-        #region Properties
+        #region Auto Properties from Fields
 
         /// <summary>
         /// Indicates if the computer starts
         /// </summary>
-        public bool ComputerStarts
-        {
-            get => _computerStarts;
-            set => SetProperty(ref _computerStarts, value);
-        }
+        [ObservableProperty]
+        private bool _twoPlayer;
 
         /// <summary>
         /// Indicates if the game has two players; otherwise, one player.
         /// </summary>
-        public bool TwoPlayer
-        {
-            get => _twoPlayer;
-            set => SetProperty(ref _twoPlayer, value);
-        }
+        [ObservableProperty]
+        private bool _computerStarts;
+
+        #endregion Fields
+        
+        #region Auto Relay Commands from Methods
 
         /// <summary>
         /// Navigate to the about view
         /// </summary>
-        public async void NavigateToAboutView()
+        [RelayCommand]
+        public async void AboutClick()
         {
             try
             {
@@ -82,7 +47,8 @@ namespace TicTacToe.ViewModels
         /// <summary>
         /// Navigate to the game play view
         /// </summary>
-        public async void NavigateToGamePlayView()
+        [RelayCommand]
+        public async void StartClick()
         {
             try
             {
@@ -94,7 +60,9 @@ namespace TicTacToe.ViewModels
             }
         }
 
-        #endregion Properties
+        #endregion Relay Commands
+
+
 
     }
 }

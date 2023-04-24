@@ -10,7 +10,7 @@
     <Shell.TitleView>
         <StackLayout>
             <Button
-                Command="{Binding AboutClick}"
+                Command="{Binding AboutClickCommand}"
                 FontSize="14"
                 HorizontalOptions="End"
                 Text="About" />
@@ -75,7 +75,7 @@
 
         <Button
             Grid.Row="5"
-            Command="{Binding StartClick}"
+            Command="{Binding StartClickCommand}"
             FontSize="32"
             HorizontalOptions="Center"
             Text="Start" />
