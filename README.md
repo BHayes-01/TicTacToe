@@ -6,13 +6,13 @@ Tic-Tac-Toe is an open-source project that provides an example for a simple appl
 
 If I have time in the future, there are a few things that I was wanting to add:
 
-•	Ability for the user to pick X or O.
+  •	Ability for the user to pick wether they want to be X or O.
 
-•	Add a shaking effect when the user clicks down on the X or O.
+  •	Add a shaking effect when the user clicks down on the X or O.
 
-•	Add a small delay before the computer plays.
+  •	Add a small delay before the computer plays.
 
-•	Add the ability for the computer to occasionally loose, currently it never does.
+  •	Add the ability for the computer to occasionally loose, currently it never does.
 
 # Supports
 
