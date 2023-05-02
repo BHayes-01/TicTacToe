@@ -5,16 +5,23 @@ Tic-Tac-Toe is an open-source project that provides an example for a simple appl
 # Possible Future Changes
 
 If I have time in the future, there are a few things that I was wanting to add:
+
 •	Ability for the user to pick X or O.
+
 •	Add a shaking effect when the user clicks down on the X or O.
+
 •	Add a small delay before the computer plays.
+
 •	Add the ability for the computer to occasionally loose, currently it never does.
 
 # Supports
 
 .NET 7.0 for Windows
+
 .NET 7.0 for Android
+
 .NET 7.0 for IOS (Untested)
+
 .NET 7.0 for  MacCatalyst (Untested)
 
 # Known Issues
