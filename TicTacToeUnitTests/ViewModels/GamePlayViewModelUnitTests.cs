@@ -5,15 +5,10 @@ using Xunit.Abstractions;
 
 namespace TicTacToeUnitTests.ViewModels
 {
-    public class GamePlayViewModelUnitTests
+    public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     {
 
-        private readonly ITestOutputHelper output;
-
-        public GamePlayViewModelUnitTests(ITestOutputHelper output)
-        {
-            this.output = output;
-        }
+        private readonly ITestOutputHelper output = output;
 
         #region Constructor
 
@@ -40,7 +35,7 @@ namespace TicTacToeUnitTests.ViewModels
         [Fact]
         public void GamePlayViewModel_ApplyQueryAttributes_Constructor_Fail_Values()
         {
-            Dictionary<string, object> args = new() { { nameof(GamePlayViewModel.TwoPlayer), 3 }, { nameof(GamePlayViewModel.ComputerStarts), null } };
+            Dictionary<string, object> args = new() { { nameof(GamePlayViewModel.TwoPlayer), 3 }, { nameof(GamePlayViewModel.ComputerStarts), false } };
 
             var vm = new GamePlayViewModel();
             vm.ApplyQueryAttributes(args);
@@ -81,9 +76,9 @@ namespace TicTacToeUnitTests.ViewModels
             Assert.NotNull(cmd);
             Assert.True(cmd.GetType() == typeof(RelayCommand));
 
-            Assert.True(vm.LeftTopChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.LeftTopChoice);
             cmd.Execute(null);
-            Assert.True(vm.LeftTopChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.LeftTopChoice);
         }
 
         /// <summary>
@@ -102,9 +97,9 @@ namespace TicTacToeUnitTests.ViewModels
             Assert.NotNull(cmd);
             Assert.True(cmd.GetType() == typeof(RelayCommand));
 
-            Assert.True(vm.CenterTopChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.CenterTopChoice);
             cmd.Execute(null);
-            Assert.True(vm.CenterTopChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.CenterTopChoice);
         }
 
         /// <summary>
@@ -123,9 +118,9 @@ namespace TicTacToeUnitTests.ViewModels
             Assert.NotNull(cmd);
             Assert.True(cmd.GetType() == typeof(RelayCommand));
 
-            Assert.True(vm.RightTopChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.RightTopChoice);
             cmd.Execute(null);
-            Assert.True(vm.RightTopChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.RightTopChoice);
         }
 
         /// <summary>
@@ -144,9 +139,9 @@ namespace TicTacToeUnitTests.ViewModels
             Assert.NotNull(cmd);
             Assert.True(cmd.GetType() == typeof(RelayCommand));
 
-            Assert.True(vm.LeftMiddleChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.LeftMiddleChoice);
             cmd.Execute(null);
-            Assert.True(vm.LeftMiddleChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.LeftMiddleChoice);
         }
 
         /// <summary>
@@ -165,9 +160,9 @@ namespace TicTacToeUnitTests.ViewModels
             Assert.NotNull(cmd);
             Assert.True(cmd.GetType() == typeof(RelayCommand));
 
-            Assert.True(vm.CenterMiddleChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.CenterMiddleChoice);
             cmd.Execute(null);
-            Assert.True(vm.CenterMiddleChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.CenterMiddleChoice);
         }
 
         /// <summary>
@@ -186,9 +181,9 @@ namespace TicTacToeUnitTests.ViewModels
             Assert.NotNull(cmd);
             Assert.True(cmd.GetType() == typeof(RelayCommand));
 
-            Assert.True(vm.RightMiddleChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.RightMiddleChoice);
             cmd.Execute(null);
-            Assert.True(vm.RightMiddleChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.RightMiddleChoice);
         }
 
         /// <summary>
@@ -207,9 +202,9 @@ namespace TicTacToeUnitTests.ViewModels
             Assert.NotNull(cmd);
             Assert.True(cmd.GetType() == typeof(RelayCommand));
 
-            Assert.True(vm.LeftBottomChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.LeftBottomChoice);
             cmd.Execute(null);
-            Assert.True(vm.LeftBottomChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.LeftBottomChoice);
         }
 
         /// <summary>
@@ -228,9 +223,9 @@ namespace TicTacToeUnitTests.ViewModels
             Assert.NotNull(cmd);
             Assert.True(cmd.GetType() == typeof(RelayCommand));
 
-            Assert.True(vm.CenterBottomChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.CenterBottomChoice);
             cmd.Execute(null);
-            Assert.True(vm.CenterBottomChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.CenterBottomChoice);
         }
 
         /// <summary>
@@ -249,9 +244,9 @@ namespace TicTacToeUnitTests.ViewModels
             Assert.NotNull(cmd);
             Assert.True(cmd.GetType() == typeof(RelayCommand));
 
-            Assert.True(vm.RightBottomChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.RightBottomChoice);
             cmd.Execute(null);
-            Assert.True(vm.RightBottomChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.RightBottomChoice);
         }
 
         #endregion Tic-Tac-Tow Square Relay Commands
@@ -301,15 +296,15 @@ namespace TicTacToeUnitTests.ViewModels
             vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
             vm.LeftTopChoice = XorO.None;
-            Assert.True(vm.LeftTopChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.LeftTopChoice);
 
             vm.PlayAgainClick();
             vm.LeftTopChoice = XorO.X_Visible;
-            Assert.True(vm.LeftTopChoice == XorO.X_Visible);
+            Assert.Equal(XorO.X_Visible, vm.LeftTopChoice);
 
             vm.PlayAgainClick();
             vm.LeftTopChoice = XorO.O_Visible;
-            Assert.True(vm.LeftTopChoice == XorO.O_Visible);
+            Assert.Equal(XorO.O_Visible, vm.LeftTopChoice);
 
             Assert.True(propertyChangedCount >= 2);
         }
@@ -325,15 +320,15 @@ namespace TicTacToeUnitTests.ViewModels
             vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
             vm.CenterTopChoice = XorO.None;
-            Assert.True(vm.CenterTopChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.CenterTopChoice);
 
             vm.PlayAgainClick();
             vm.CenterTopChoice = XorO.X_Visible;
-            Assert.True(vm.CenterTopChoice == XorO.X_Visible);
+            Assert.Equal(XorO.X_Visible, vm.CenterTopChoice);
 
             vm.PlayAgainClick();
             vm.CenterTopChoice = XorO.O_Visible;
-            Assert.True(vm.CenterTopChoice == XorO.O_Visible);
+            Assert.Equal(XorO.O_Visible, vm.CenterTopChoice);
 
             Assert.True(propertyChangedCount >= 2);
         }
@@ -349,15 +344,15 @@ namespace TicTacToeUnitTests.ViewModels
             vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
             vm.RightTopChoice = XorO.None;
-            Assert.True(vm.RightTopChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.RightTopChoice);
 
             vm.PlayAgainClick();
             vm.RightTopChoice = XorO.X_Visible;
-            Assert.True(vm.RightTopChoice == XorO.X_Visible);
+            Assert.Equal(XorO.X_Visible, vm.RightTopChoice);
 
             vm.PlayAgainClick();
             vm.RightTopChoice = XorO.O_Visible;
-            Assert.True(vm.RightTopChoice == XorO.O_Visible);
+            Assert.Equal(XorO.O_Visible, vm.RightTopChoice);
 
             Assert.True(propertyChangedCount >= 2);
         }
@@ -373,15 +368,15 @@ namespace TicTacToeUnitTests.ViewModels
             vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
             vm.LeftMiddleChoice = XorO.None;
-            Assert.True(vm.LeftMiddleChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.LeftMiddleChoice);
 
             vm.PlayAgainClick();
             vm.LeftMiddleChoice = XorO.X_Visible;
-            Assert.True(vm.LeftMiddleChoice == XorO.X_Visible);
+            Assert.Equal(XorO.X_Visible, vm.LeftMiddleChoice);
 
             vm.PlayAgainClick();
             vm.LeftMiddleChoice = XorO.O_Visible;
-            Assert.True(vm.LeftMiddleChoice == XorO.O_Visible);
+            Assert.Equal(XorO.O_Visible, vm.LeftMiddleChoice);
 
             Assert.True(propertyChangedCount >= 2);
         }
@@ -397,15 +392,15 @@ namespace TicTacToeUnitTests.ViewModels
             vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
             vm.CenterMiddleChoice = XorO.None;
-            Assert.True(vm.CenterMiddleChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.CenterMiddleChoice);
 
             vm.PlayAgainClick();
             vm.CenterMiddleChoice = XorO.X_Visible;
-            Assert.True(vm.CenterMiddleChoice == XorO.X_Visible);
+            Assert.Equal(XorO.X_Visible, vm.CenterMiddleChoice);
 
             vm.PlayAgainClick();
             vm.CenterMiddleChoice = XorO.O_Visible;
-            Assert.True(vm.CenterMiddleChoice == XorO.O_Visible);
+            Assert.Equal(XorO.O_Visible, vm.CenterMiddleChoice);
 
             Assert.True(propertyChangedCount >= 2);
         }
@@ -421,15 +416,15 @@ namespace TicTacToeUnitTests.ViewModels
             vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
             vm.RightMiddleChoice = XorO.None;
-            Assert.True(vm.RightMiddleChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.RightMiddleChoice);
 
             vm.PlayAgainClick();
             vm.RightMiddleChoice = XorO.X_Visible;
-            Assert.True(vm.RightMiddleChoice == XorO.X_Visible);
+            Assert.Equal(XorO.X_Visible, vm.RightMiddleChoice);
 
             vm.PlayAgainClick();
             vm.RightMiddleChoice = XorO.O_Visible;
-            Assert.True(vm.RightMiddleChoice == XorO.O_Visible);
+            Assert.Equal(XorO.O_Visible, vm.RightMiddleChoice);
 
             Assert.True(propertyChangedCount >= 2);
         }
@@ -445,15 +440,15 @@ namespace TicTacToeUnitTests.ViewModels
             vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
             vm.LeftBottomChoice = XorO.None;
-            Assert.True(vm.LeftBottomChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.LeftBottomChoice);
 
             vm.PlayAgainClick();
             vm.LeftBottomChoice = XorO.X_Visible;
-            Assert.True(vm.LeftBottomChoice == XorO.X_Visible);
+            Assert.Equal(XorO.X_Visible, vm.LeftBottomChoice);
 
             vm.PlayAgainClick();
             vm.LeftBottomChoice = XorO.O_Visible;
-            Assert.True(vm.LeftBottomChoice == XorO.O_Visible);
+            Assert.Equal(XorO.O_Visible, vm.LeftBottomChoice);
 
             Assert.True(propertyChangedCount >= 2);
         }
@@ -469,15 +464,15 @@ namespace TicTacToeUnitTests.ViewModels
             vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
             vm.CenterBottomChoice = XorO.None;
-            Assert.True(vm.CenterBottomChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.CenterBottomChoice);
 
             vm.PlayAgainClick();
             vm.CenterBottomChoice = XorO.X_Visible;
-            Assert.True(vm.CenterBottomChoice == XorO.X_Visible);
+            Assert.Equal(XorO.X_Visible, vm.CenterBottomChoice);
 
             vm.PlayAgainClick();
             vm.CenterBottomChoice = XorO.O_Visible;
-            Assert.True(vm.CenterBottomChoice == XorO.O_Visible);
+            Assert.Equal(XorO.O_Visible, vm.CenterBottomChoice);
 
             Assert.True(propertyChangedCount >= 2);
         }
@@ -493,15 +488,15 @@ namespace TicTacToeUnitTests.ViewModels
             vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
             vm.RightBottomChoice = XorO.None;
-            Assert.True(vm.RightBottomChoice == XorO.None);
+            Assert.Equal(XorO.None, vm.RightBottomChoice);
 
             vm.PlayAgainClick();
             vm.RightBottomChoice = XorO.X_Visible;
-            Assert.True(vm.RightBottomChoice == XorO.X_Visible);
+            Assert.Equal(XorO.X_Visible, vm.RightBottomChoice);
 
             vm.PlayAgainClick();
             vm.RightBottomChoice = XorO.O_Visible;
-            Assert.True(vm.RightBottomChoice == XorO.O_Visible);
+            Assert.Equal(XorO.O_Visible, vm.RightBottomChoice);
 
             Assert.True(propertyChangedCount >= 2);
         }
@@ -595,7 +590,7 @@ namespace TicTacToeUnitTests.ViewModels
 
             var origValue = vm.Instructions;
             vm.Instructions = cTestValue;
-            Assert.True(string.Equals(vm.Instructions, cTestValue, StringComparison.Ordinal));
+            Assert.Equal(cTestValue, vm.Instructions);
 
             vm.Instructions = origValue;
 
@@ -605,8 +600,7 @@ namespace TicTacToeUnitTests.ViewModels
         [Fact]
         public void GamePlayViewModel_IsComputersTurn_False()
         {
-            var vm = new GamePlayViewModel();
-            vm.TwoPlayer = true; // prevent the computer from playing
+            var vm = new GamePlayViewModel { TwoPlayer = true }; // prevent the computer from playing 
             vm.PlayAgainClick();
             Assert.False(vm.IsComputersTurn);
         }
@@ -614,8 +608,7 @@ namespace TicTacToeUnitTests.ViewModels
         [Fact]
         public void GamePlayViewModel_IsComputersTurn_True()
         {
-            var vm = new GamePlayViewModel();
-            vm.TwoPlayer = true;  // prevent the computer from playing, but the value will be set anyway
+            var vm = new GamePlayViewModel { TwoPlayer = true }; // prevent the computer from playing 
             vm.PlayAgainClick();
             vm.LeftTopClickCommand.Execute(XorO.None);
             Assert.True(vm.IsComputersTurn);
@@ -748,9 +741,11 @@ namespace TicTacToeUnitTests.ViewModels
         [Fact]
         public void GamePlayViewModel_CheckBestChoice_0()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.LeftTopChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                LeftTopChoice = XorO.X_Visible
+            };
             var threeChoices = new int[] { 0, 1, 2 };
             var result = vm.CheckBestChoice(threeChoices, XorO.X_Visible);
             Assert.True(result == 1 || result == 2);
@@ -759,33 +754,39 @@ namespace TicTacToeUnitTests.ViewModels
         [Fact]
         public void GamePlayViewModel_CheckBestChoice_1()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.LeftTopChoice = XorO.X_Visible;
-            vm.CenterTopChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                LeftTopChoice = XorO.X_Visible,
+                CenterTopChoice = XorO.X_Visible
+            };
             var threeChoices = new int[] { 0, 1, 2 };
             var result = vm.CheckBestChoice(threeChoices, XorO.X_Visible);
-            Assert.True(result == 2);
+            Assert.Equal(2, result);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckBestChoice_2()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.LeftTopChoice = XorO.X_Visible;
-            vm.RightTopChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                LeftTopChoice = XorO.X_Visible,
+                RightTopChoice = XorO.X_Visible
+            };
             var threeChoices = new int[] { 0, 1, 2 };
             var result = vm.CheckBestChoice(threeChoices, XorO.X_Visible);
-            Assert.True(result == 1);
+            Assert.Equal(1, result);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckBestChoice_3()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.CenterTopChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                CenterTopChoice = XorO.X_Visible
+            };
             var threeChoices = new int[] { 0, 1, 2 };
             var result = vm.CheckBestChoice(threeChoices, XorO.X_Visible);
             Assert.True(result == 0 || result == 2);
@@ -794,34 +795,40 @@ namespace TicTacToeUnitTests.ViewModels
         [Fact]
         public void GamePlayViewModel_CheckBestChoice_4()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.CenterTopChoice = XorO.X_Visible;
-            vm.LeftTopChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                CenterTopChoice = XorO.X_Visible,
+                LeftTopChoice = XorO.X_Visible
+            };
 
             var threeChoices = new int[] { 0, 1, 2 };
             var result = vm.CheckBestChoice(threeChoices, XorO.X_Visible);
-            Assert.True(result == 2);
+            Assert.Equal(2, result);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckBestChoice_5()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.CenterTopChoice = XorO.X_Visible;
-            vm.RightTopChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                CenterTopChoice = XorO.X_Visible,
+                RightTopChoice = XorO.X_Visible
+            };
             var threeChoices = new int[] { 0, 1, 2 };
             var result = vm.CheckBestChoice(threeChoices, XorO.X_Visible);
-            Assert.True(result == 0);
+            Assert.Equal(0, result);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckBestChoice_6()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.RightTopChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                RightTopChoice = XorO.X_Visible
+            };
             var threeChoices = new int[] { 0, 1, 2 };
             var result = vm.CheckBestChoice(threeChoices, XorO.X_Visible);
             Assert.True(result == 0 || result == 1);
@@ -830,26 +837,30 @@ namespace TicTacToeUnitTests.ViewModels
         [Fact]
         public void GamePlayViewModel_CheckBestChoice_7()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.RightTopChoice = XorO.X_Visible;
-            vm.LeftTopChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                RightTopChoice = XorO.X_Visible,
+                LeftTopChoice = XorO.X_Visible
+            };
 
             var threeChoices = new int[] { 0, 1, 2 };
             var result = vm.CheckBestChoice(threeChoices, XorO.X_Visible);
-            Assert.True(result == 1);
+            Assert.Equal(1, result);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckBestChoice_8()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.RightTopChoice = XorO.X_Visible;
-            vm.CenterTopChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                RightTopChoice = XorO.X_Visible,
+                CenterTopChoice = XorO.X_Visible
+            };
             var threeChoices = new int[] { 0, 1, 2 };
             var result = vm.CheckBestChoice(threeChoices, XorO.X_Visible);
-            Assert.True(result == 0);
+            Assert.Equal(0, result);
         }
 
         [Fact]
@@ -878,7 +889,7 @@ namespace TicTacToeUnitTests.ViewModels
 
             var result = vm.CheckShouldPlay(threeChoices, XorO.X_Visible);
 
-            Assert.True(result == 2);
+            Assert.Equal(2, result);
         }
 
         [Fact]
@@ -893,7 +904,7 @@ namespace TicTacToeUnitTests.ViewModels
 
             var result = vm.CheckShouldPlay(threeChoices, XorO.X_Visible);
 
-            Assert.True(result == 1);
+            Assert.Equal(1, result);
         }
 
         [Fact]
@@ -908,7 +919,7 @@ namespace TicTacToeUnitTests.ViewModels
 
             var result = vm.CheckShouldPlay(threeChoices, XorO.X_Visible);
 
-            Assert.True(result == 0);
+            Assert.Equal(0, result);
         }
 
         [Fact]
@@ -932,9 +943,11 @@ namespace TicTacToeUnitTests.ViewModels
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win0_X()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.LeftTopChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                LeftTopChoice = XorO.X_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -944,15 +957,17 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.RightTopChoice = XorO.X_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 0);
+            Assert.Equal(0, vm.WinningSelection);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win0_O()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.LeftTopChoice = XorO.O_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                LeftTopChoice = XorO.O_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -962,15 +977,17 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.RightTopChoice = XorO.O_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 0);
+            Assert.Equal(0, vm.WinningSelection);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win1_X()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.LeftMiddleChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                LeftMiddleChoice = XorO.X_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -980,15 +997,17 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.RightMiddleChoice = XorO.X_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 1);
+            Assert.Equal(1, vm.WinningSelection);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win1_O()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.LeftMiddleChoice = XorO.O_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                LeftMiddleChoice = XorO.O_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -998,15 +1017,17 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.RightMiddleChoice = XorO.O_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 1);
+            Assert.Equal(1, vm.WinningSelection);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win2_X()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.LeftBottomChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                LeftBottomChoice = XorO.X_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -1016,15 +1037,17 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.RightBottomChoice = XorO.X_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 2);
+            Assert.Equal(2, vm.WinningSelection);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win2_O()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.LeftBottomChoice = XorO.O_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                LeftBottomChoice = XorO.O_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -1034,15 +1057,17 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.RightBottomChoice = XorO.O_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 2);
+            Assert.Equal(2, vm.WinningSelection);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win3_X()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.LeftTopChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                LeftTopChoice = XorO.X_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -1052,15 +1077,17 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.LeftBottomChoice = XorO.X_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 3);
+            Assert.Equal(3, vm.WinningSelection);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win3_O()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.LeftTopChoice = XorO.O_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                LeftTopChoice = XorO.O_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -1070,15 +1097,17 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.LeftBottomChoice = XorO.O_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 3);
+            Assert.Equal(3, vm.WinningSelection);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win4_X()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.CenterTopChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                CenterTopChoice = XorO.X_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -1088,15 +1117,17 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.CenterBottomChoice = XorO.X_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 4);
+            Assert.Equal(4, vm.WinningSelection);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win4_O()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.CenterTopChoice = XorO.O_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                CenterTopChoice = XorO.O_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -1106,15 +1137,17 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.CenterBottomChoice = XorO.O_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 4);
+            Assert.Equal(4, vm.WinningSelection);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win5_X()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.RightTopChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                RightTopChoice = XorO.X_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -1124,15 +1157,17 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.RightBottomChoice = XorO.X_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 5);
+            Assert.Equal(5, vm.WinningSelection);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win5_O()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.RightTopChoice = XorO.O_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                RightTopChoice = XorO.O_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -1142,15 +1177,17 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.RightBottomChoice = XorO.O_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 5);
+            Assert.Equal(5, vm.WinningSelection);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win6_X()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.LeftTopChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                LeftTopChoice = XorO.X_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -1160,15 +1197,17 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.RightBottomChoice = XorO.X_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 6);
+            Assert.Equal(6, vm.WinningSelection);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win6_O()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.LeftTopChoice = XorO.O_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                LeftTopChoice = XorO.O_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -1178,15 +1217,17 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.RightBottomChoice = XorO.O_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 6);
+            Assert.Equal(6, vm.WinningSelection);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win7_X()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.RightTopChoice = XorO.X_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                RightTopChoice = XorO.X_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -1196,15 +1237,17 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.LeftBottomChoice = XorO.X_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 7);
+            Assert.Equal(7, vm.WinningSelection);
         }
 
         [Fact]
         public void GamePlayViewModel_CheckIfWinnerOrDraw_Win7_O()
         {
-            var vm = new GamePlayViewModel { TwoPlayer = true };
-
-            vm.RightTopChoice = XorO.O_Visible;
+            var vm = new GamePlayViewModel
+            {
+                TwoPlayer = true,
+                RightTopChoice = XorO.O_Visible
+            };
             vm.CheckIfWinnerOrDraw();
             Assert.True(vm.WinningSelection == -1);
 
@@ -1214,7 +1257,7 @@ namespace TicTacToeUnitTests.ViewModels
 
             vm.LeftBottomChoice = XorO.O_Visible;
             vm.CheckIfWinnerOrDraw();
-            Assert.True(vm.WinningSelection == 7);
+            Assert.Equal(7, vm.WinningSelection);
         }
 
         #endregion CheckIfWinnerOrDraw
@@ -1321,9 +1364,9 @@ namespace TicTacToeUnitTests.ViewModels
             vm.Play(0);
 
             var count = vm._board.Count(o => o.Equals(XorO.None));
-            Assert.True(count == 8);
+            Assert.Equal(8, count);
 
-            Assert.True(vm.LeftTopChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.LeftTopChoice);
         }
 
         [Fact]
@@ -1334,9 +1377,9 @@ namespace TicTacToeUnitTests.ViewModels
             vm.Play(1);
 
             var count = vm._board.Count(o => o.Equals(XorO.None));
-            Assert.True(count == 8);
+            Assert.Equal(8, count);
 
-            Assert.True(vm.CenterTopChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.CenterTopChoice);
         }
 
         [Fact]
@@ -1347,9 +1390,9 @@ namespace TicTacToeUnitTests.ViewModels
             vm.Play(2);
 
             var count = vm._board.Count(o => o.Equals(XorO.None));
-            Assert.True(count == 8);
+            Assert.Equal(8, count);
 
-            Assert.True(vm.RightTopChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.RightTopChoice);
         }
 
         [Fact]
@@ -1360,9 +1403,9 @@ namespace TicTacToeUnitTests.ViewModels
             vm.Play(3);
 
             var count = vm._board.Count(o => o.Equals(XorO.None));
-            Assert.True(count == 8);
+            Assert.Equal(8, count);
 
-            Assert.True(vm.LeftMiddleChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.LeftMiddleChoice);
         }
 
         [Fact]
@@ -1373,9 +1416,9 @@ namespace TicTacToeUnitTests.ViewModels
             vm.Play(4);
 
             var count = vm._board.Count(o => o.Equals(XorO.None));
-            Assert.True(count == 8);
+            Assert.Equal(8, count);
 
-            Assert.True(vm.CenterMiddleChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.CenterMiddleChoice);
         }
 
         [Fact]
@@ -1386,9 +1429,9 @@ namespace TicTacToeUnitTests.ViewModels
             vm.Play(5);
 
             var count = vm._board.Count(o => o.Equals(XorO.None));
-            Assert.True(count == 8);
+            Assert.Equal(8, count);
 
-            Assert.True(vm.RightMiddleChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.RightMiddleChoice);
         }
 
         [Fact]
@@ -1399,9 +1442,9 @@ namespace TicTacToeUnitTests.ViewModels
             vm.Play(6);
 
             var count = vm._board.Count(o => o.Equals(XorO.None));
-            Assert.True(count == 8);
+            Assert.Equal(8, count);
 
-            Assert.True(vm.LeftBottomChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.LeftBottomChoice);
         }
 
         [Fact]
@@ -1412,9 +1455,9 @@ namespace TicTacToeUnitTests.ViewModels
             vm.Play(7);
 
             var count = vm._board.Count(o => o.Equals(XorO.None));
-            Assert.True(count == 8);
+            Assert.Equal(8, count);
 
-            Assert.True(vm.CenterBottomChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.CenterBottomChoice);
         }
 
         [Fact]
@@ -1425,9 +1468,9 @@ namespace TicTacToeUnitTests.ViewModels
             vm.Play(8);
 
             var count = vm._board.Count(o => o.Equals(XorO.None));
-            Assert.True(count == 8);
+            Assert.Equal(8, count);
 
-            Assert.True(vm.RightBottomChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.RightBottomChoice);
         }
 
         [Fact]
@@ -1438,17 +1481,17 @@ namespace TicTacToeUnitTests.ViewModels
             vm.Play(0);
 
             var count = vm._board.Count(o => o.Equals(XorO.None));
-            Assert.True(count == 8);
+            Assert.Equal(8, count);
 
-            Assert.True(vm.LeftTopChoice != XorO.None);
+            Assert.NotEqual(XorO.None, vm.LeftTopChoice);
             var value = vm.LeftTopChoice;
 
             vm.Play(0);
 
             count = vm._board.Count(o => o.Equals(XorO.None));
-            Assert.True(count == 8);
+            Assert.Equal(8, count);
 
-            Assert.True(vm.LeftTopChoice == value);
+            Assert.Equal(vm.LeftTopChoice, value);
         }
 
         #endregion Play
@@ -1496,7 +1539,7 @@ namespace TicTacToeUnitTests.ViewModels
             output.WriteLine("");
         }
 
-        private char DisplayXorO(XorO value)
+        private static char DisplayXorO(XorO value)
         {
             if (value == 0)
                 return '-';

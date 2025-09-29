@@ -11,28 +11,28 @@
         <converters:EnumBoolConverter x:Key="EnumBoolConverter" />
     </ContentView.Resources>
 
-    <Grid>
+    <Grid x:Name="SquareControlGrid">
         <Line
-            HorizontalOptions="CenterAndExpand"
+            HorizontalOptions="Center"
             IsVisible="{Binding XorO_Value, Source={RelativeSource AncestorType={x:Type customControls:SquareControl}}, Converter={StaticResource EnumBoolConverter}, ConverterParameter=X_Visible}"
             Scale="0.9"
             Stroke="{StaticResource MyRed}"
             StrokeThickness="4"
-            VerticalOptions="CenterAndExpand"
+            VerticalOptions="Center"
             X1="0"
-            X2="{Binding Path=Width, Source={RelativeSource AncestorType={x:Type Grid}}}"
+            X2="{Binding Width, Source={x:Reference SquareControlGrid}}"
             Y1="0"
-            Y2="{Binding Path=Width, Source={RelativeSource AncestorType={x:Type Grid}}}" />
+            Y2="{Binding Width, Source={x:Reference SquareControlGrid}}" />
         <Line
-            HorizontalOptions="CenterAndExpand"
+            HorizontalOptions="Center"
             IsVisible="{Binding XorO_Value, Source={RelativeSource AncestorType={x:Type customControls:SquareControl}}, Converter={StaticResource EnumBoolConverter}, ConverterParameter=X_Visible}"
             Scale="0.9"
             Stroke="{StaticResource MyRed}"
             StrokeThickness="4"
-            VerticalOptions="CenterAndExpand"
+            VerticalOptions="Center"
             X1="0"
-            X2="{Binding Path=Width, Source={RelativeSource AncestorType={x:Type Grid}}}"
-            Y1="{Binding Path=Width, Source={RelativeSource AncestorType={x:Type Grid}}}"
+            X2="{Binding Width, Source={x:Reference SquareControlGrid}}"
+            Y1="{Binding Width, Source={x:Reference SquareControlGrid}}"
             Y2="0" />
         <Ellipse
             HorizontalOptions="Fill"

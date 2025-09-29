@@ -128,12 +128,6 @@
         </Setter>
     </Style>
 
-    <Style TargetType="Frame">
-        <Setter Property="HasShadow" Value="False" />
-        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray950}}" />
-        <Setter Property="CornerRadius" Value="8" />
-    </Style>
-
     <Style TargetType="ImageButton">
         <Setter Property="Opacity" Value="1" />
         <Setter Property="BorderColor" Value="Transparent" />
@@ -409,23 +403,23 @@
     </Style>
 
     <Style x:Key="HorizontalLine" TargetType="Line">
-        <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
+        <Setter Property="HorizontalOptions" Value="Center" />
         <Setter Property="Stroke" Value="Black" />
         <Setter Property="StrokeThickness" Value="4" />
         <Setter Property="X1" Value="0" />
-        <Setter Property="X2" Value="{Binding Path=Width, Source={RelativeSource AncestorType={x:Type Grid}}}" />
+        <Setter Property="X2" Value="{Binding Width, Source={RelativeSource AncestorType={x:Type Grid}}}" />
         <Setter Property="Y1" Value="0" />
         <Setter Property="Y2" Value="0" />
     </Style>
 
     <Style x:Key="VerticalLine" TargetType="Line">
-        <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
+        <Setter Property="HorizontalOptions" Value="Center" />
         <Setter Property="Stroke" Value="Black" />
         <Setter Property="StrokeThickness" Value="4" />
         <Setter Property="X1" Value="0" />
         <Setter Property="X2" Value="0" />
         <Setter Property="Y1" Value="0" />
-        <Setter Property="Y2" Value="{Binding Path=Width, Source={RelativeSource AncestorType={x:Type Grid}}}" />
+        <Setter Property="Y2" Value="{Binding Height, Source={RelativeSource AncestorType={x:Type Grid}}}" />
     </Style>
 
 
