@@ -16,13 +16,13 @@ If I have time in the future, there are a few things that I was wanting to add:
 
 # Supports
 
-.NET 7.0 for Windows
+.NET 9.0 for Windows
 
-.NET 7.0 for Android
+.NET 9.0 for Android
 
-.NET 7.0 for IOS (Untested)
+.NET 9.0 for IOS (Untested)
 
-.NET 7.0 for  MacCatalyst (Untested)
+.NET 9.0 for  MacCatalyst (Untested)
 
 # Known Issues
 
