@@ -6,6 +6,7 @@
     xmlns:viewModels="clr-namespace:TicTacToe.ViewModels"
     x:DataType="viewModels:AboutViewModel">
     <ScrollView
+        x:Name="scrViewAbout"
         Margin="0"
         HorizontalOptions="FillAndExpand"
         VerticalOptions="FillAndExpand"
@@ -13,6 +14,7 @@
         <VerticalStackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
 
             <Label
+                x:Name="lblTicTacToe"
                 Margin="0,6"
                 FontSize="32"
                 HorizontalOptions="Center"
@@ -20,6 +22,7 @@
                 Text="TIC-TAC-TOE" />
 
             <Image
+                x:Name="imgDotNetBot"
                 Margin="0,6"
                 HeightRequest="200"
                 HorizontalOptions="Center"
@@ -27,6 +30,7 @@
                 Source="dotnet_bot.png" />
 
             <Label
+                x:Name="lblNetMultiplatformApp"
                 Margin="0,6"
                 FontSize="16"
                 HorizontalOptions="Center"
@@ -35,24 +39,28 @@
                 Text="A .NET Multi-platform App UI" />
 
             <Label
+                x:Name="lblAuthor"
                 Margin="0,2"
                 FontSize="14"
                 HorizontalOptions="Center"
                 Text="{Binding Author, StringFormat='Created By: {0}'}" />
 
             <Label
+                x:Name="lblVersion"
                 Margin="0,2"
                 FontSize="14"
                 HorizontalOptions="Center"
                 Text="{Binding Version, StringFormat='Version: {0}'}" />
 
             <Label
+                x:Name="lblPublishDate"
                 Margin="0,2"
                 FontSize="14"
                 HorizontalOptions="Center"
-                Text="Date Published: April 2023" />
+                Text="{Binding PublishDateTime, StringFormat='Date Published: {0:MMMM d, yyyy}'}" />
 
             <Label
+                x:Name="lblLicense"
                 Margin="0,2"
                 FontSize="14"
                 HorizontalOptions="Center">

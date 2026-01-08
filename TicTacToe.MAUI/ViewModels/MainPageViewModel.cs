@@ -7,7 +7,7 @@ namespace TicTacToe.ViewModels
     /// <summary>
     /// This is the main page or start page
     /// </summary>
-    public partial class MainPageViewModel : ObservableObject
+    public partial class MainPageViewModel : ViewModelSupport
     {
 
         #region Auto Properties from Fields
@@ -61,8 +61,6 @@ namespace TicTacToe.ViewModels
         }
 
         #endregion Relay Commands
-
-
 
     }
 }

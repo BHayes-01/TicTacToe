@@ -24,7 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TicTacToe\TicTacToe.csproj" />
+    <ProjectReference Include="..\TicTacToe.Business\TicTacToe.Business.csproj" />
+    <ProjectReference Include="..\TicTacToe.MAUI\TicTacToe.MAUI.csproj" />
   </ItemGroup>
 
 </Project>

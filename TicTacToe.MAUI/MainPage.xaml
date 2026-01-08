@@ -10,6 +10,7 @@
     <Shell.TitleView>
         <StackLayout>
             <Button
+                x:Name="btnAbout"
                 Command="{Binding AboutClickCommand}"
                 FontSize="14"
                 HorizontalOptions="End"
@@ -25,10 +26,12 @@
             <RowDefinition Height="AUTO" />
             <RowDefinition Height="*" />
             <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Label
+            x:Name="lblTicTacToe"
             FontSize="32"
             HorizontalOptions="Center"
             SemanticProperties.HeadingLevel="Level1"
@@ -43,10 +46,12 @@
             </Grid.ColumnDefinitions>
 
             <CheckBox
+                x:Name="chkTwoPlayer"
                 Grid.Column="0"
                 IsChecked="{Binding TwoPlayer}"
                 VerticalOptions="Center" />
             <Label
+                x:Name="lblTwoPlayer"
                 Grid.Column="1"
                 FontSize="24"
                 Text="Two Player?"
@@ -62,10 +67,12 @@
             </Grid.ColumnDefinitions>
 
             <CheckBox
+                x:Name="chkComputerStarts"
                 Grid.Column="0"
                 IsChecked="{Binding ComputerStarts}"
                 VerticalOptions="Center" />
             <Label
+                x:Name="lblComputerStarts"
                 Grid.Column="1"
                 FontSize="24"
                 Text="Computer Starts?"
@@ -74,11 +81,23 @@
         </Grid>
 
         <Button
+            x:Name="btnStart"
             Grid.Row="5"
+            Margin="8"
             Command="{Binding StartClickCommand}"
             FontSize="32"
             HorizontalOptions="Center"
             Text="Start" />
+
+        <Button
+            x:Name="btnQuit"
+            Grid.Row="6"
+            Margin="8"
+            Padding="18,8"
+            Command="{Binding QuitClickCommand}"
+            FontSize="32"
+            HorizontalOptions="Center"
+            Text="Quit" />
     </Grid>
 
 </ContentPage>

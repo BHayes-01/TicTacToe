@@ -8,7 +8,8 @@
     xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewModels="clr-namespace:TicTacToe.ViewModels"
     x:DataType="viewModels:GamePlayViewModel"
-    SizeChanged="ContentPage_SizeChanged">
+    SizeChanged="ContentPage_SizeChanged"
+    Appearing="ContentPage_Appearing" >
 
     <Grid>
 
@@ -21,23 +22,27 @@
         </Grid.RowDefinitions>
 
         <Label
+            x:Name="lblTicTacToe"
             FontSize="32"
             HorizontalOptions="Center"
             SemanticProperties.HeadingLevel="Level1"
             Text="TIC-TAC-TOE" />
 
         <Label
+            x:Name="lblInstructions"
             Grid.Row="1"
             FontSize="24"
             HorizontalOptions="Center"
             Text="{Binding Instructions}" />
 
         <VerticalStackLayout
+            x:Name="stkGameBoard"
             Grid.Row="3"
             HorizontalOptions="Center"
             VerticalOptions="Center">
 
             <Grid
+                x:Name="gridGameBoard"
                 HeightRequest="{Binding GridSize, Mode=TwoWay}"
                 HorizontalOptions="Fill"
                 VerticalOptions="Fill"
@@ -61,6 +66,7 @@
 
                 <!--  TOP LEFT  -->
                 <customControls:SquareControl
+                    x:Name="squareTopLeft"
                     Grid.Row="0"
                     Grid.Column="0"
                     XorO_Command="{Binding LeftTopClickCommand}"
@@ -68,6 +74,7 @@
 
                 <!--  TOP MIDDLE  -->
                 <customControls:SquareControl
+                    x:Name="squareCenterTop"
                     Grid.Row="0"
                     Grid.Column="2"
                     XorO_Command="{Binding CenterTopClickCommand}"
@@ -75,6 +82,7 @@
 
                 <!--  TOP RIGHT  -->
                 <customControls:SquareControl
+                    x:Name="squareRightTop"
                     Grid.Row="0"
                     Grid.Column="4"
                     XorO_Command="{Binding RightTopClickCommand}"
@@ -82,6 +90,7 @@
 
                 <!--  MIDDLE LEFT  -->
                 <customControls:SquareControl
+                    x:Name="squareLeftMiddle"
                     Grid.Row="2"
                     Grid.Column="0"
                     XorO_Command="{Binding LeftMiddleClickCommand}"
@@ -89,6 +98,7 @@
 
                 <!--  CENTER  -->
                 <customControls:SquareControl
+                    x:Name="squareCenterMiddle"
                     Grid.Row="2"
                     Grid.Column="2"
                     XorO_Command="{Binding CenterMiddleClickCommand}"
@@ -96,6 +106,7 @@
 
                 <!--  MIDDLE RIGHT  -->
                 <customControls:SquareControl
+                    x:Name="squareRightMiddle"
                     Grid.Row="2"
                     Grid.Column="4"
                     XorO_Command="{Binding RightMiddleClickCommand}"
@@ -103,6 +114,7 @@
 
                 <!--  BOTTOM LEFT  -->
                 <customControls:SquareControl
+                    x:Name="squareLeftBottom"
                     Grid.Row="4"
                     Grid.Column="0"
                     XorO_Command="{Binding LeftBottomClickCommand}"
@@ -110,6 +122,7 @@
 
                 <!--  BOTTOM MIDDLE  -->
                 <customControls:SquareControl
+                    x:Name="squareCenterBottom"
                     Grid.Row="4"
                     Grid.Column="2"
                     XorO_Command="{Binding CenterBottomClickCommand}"
@@ -117,6 +130,7 @@
 
                 <!--  BOTTOM RIGHT  -->
                 <customControls:SquareControl
+                    x:Name="squareRightBottom"
                     Grid.Row="4"
                     Grid.Column="4"
                     XorO_Command="{Binding RightBottomClickCommand}"
@@ -124,24 +138,28 @@
 
                 <!--  CHECKER GRID  -->
                 <Line
+                    x:Name="lineLeftVertical"
                     Grid.Row="0"
                     Grid.RowSpan="5"
                     Grid.Column="1"
                     Style="{StaticResource VerticalLine}" />
 
                 <Line
+                    x:Name="lineRightVertical"
                     Grid.Row="0"
                     Grid.RowSpan="5"
                     Grid.Column="3"
                     Style="{StaticResource VerticalLine}" />
 
                 <Line
+                    x:Name="lineTopHorizontal"
                     Grid.Row="1"
                     Grid.Column="0"
                     Grid.ColumnSpan="5"
                     Style="{StaticResource HorizontalLine}" />
 
                 <Line
+                    x:Name="lineBottomHorizontal"
                     Grid.Row="3"
                     Grid.Column="0"
                     Grid.ColumnSpan="5"
@@ -150,6 +168,7 @@
                 <!--  SHOW 3 IN A ROW  -->
 
                 <Line
+                    x:Name="lineWinning"
                     Grid.Row="0"
                     Grid.RowSpan="5"
                     Grid.Column="0"
@@ -167,24 +186,34 @@
 
         </VerticalStackLayout>
 
-        <HorizontalStackLayout
-            Grid.Row="3"
-            HorizontalOptions="CenterAndExpand"
+        <Grid
+            Grid.Row="0"
+            Grid.RowSpan="5"
+            HorizontalOptions="Center"
             IsVisible="{Binding GameOver}"
-            VerticalOptions="CenterAndExpand">
+            VerticalOptions="Center">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="AUTO" />
+                <RowDefinition Height="AUTO" />
+            </Grid.RowDefinitions>
 
             <Button
+                x:Name="btnPlayAgain"
+                Grid.Row="0"
                 Margin="12"
                 Command="{Binding PlayAgainClickCommand}"
                 FontSize="24"
                 Text="Play Again" />
             <Button
+                x:Name="btnQuit"
+                Grid.Row="1"
                 Margin="12"
                 Command="{Binding QuitClickCommand}"
                 FontSize="24"
                 Text="Quit" />
 
-        </HorizontalStackLayout>
+        </Grid>
 
 
     </Grid>

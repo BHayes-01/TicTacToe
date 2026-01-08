@@ -6,9 +6,10 @@ public partial class GamePlayView
 {
 	public GamePlayView(GamePlayViewModel viewModel)
 	{
-		InitializeComponent();
 		BindingContext = viewModel;
-	}
+		InitializeComponent();
+		ForceLayout();
+    }
 
     private void ContentPage_SizeChanged(object sender, EventArgs e)
     {
@@ -18,4 +19,11 @@ public partial class GamePlayView
 			viewModel.SizeChanged(Width, Height);
     }
 
+    private async void ContentPage_Appearing(object sender, EventArgs e)
+    {
+		await Task.Delay(500);
+
+		lineLeftVertical.InvalidateMeasure();
+		lineBottomHorizontal.InvalidateMeasure();
+    }
 }

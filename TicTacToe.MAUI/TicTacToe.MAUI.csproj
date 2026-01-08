@@ -15,7 +15,6 @@
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 		<SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>
 		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
 		
@@ -42,11 +41,12 @@
 		<PackageIcon>TicTacTow.png</PackageIcon>
 		<RepositoryUrl>https://github.com/BHayes-01/TicTacToe</RepositoryUrl>
 		<PackageTags>.NET CORE;MAUI</PackageTags>
-		<AssemblyVersion>1.0.0</AssemblyVersion>
-		<FileVersion>1.0.0</FileVersion>
+		<AssemblyVersion>1.1.0</AssemblyVersion>
+		<FileVersion>1.1.0</FileVersion>
 		<NeutralLanguage>en</NeutralLanguage>
 		<Authors>Charles B. Hayes</Authors>
 		<Product>TicTacToe</Product>
+		<WindowsPackageType>None</WindowsPackageType>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -76,7 +76,6 @@
 	  <Compile Remove="Converters\EnumVisibilityConverter.cs" />
 	  <Compile Remove="Converters\NegateBoolConverter.cs" />
 	  <Compile Remove="CustomControls\XorO_Command.cs" />
-	  <Compile Remove="Enums\NavigationLocation.cs" />
 	  <Compile Remove="Platforms\Windows\Program.cs" />
 	  <Compile Remove="ViewModels\BaseViewModel.cs" />
 	  <Compile Remove="ViewModels\GameOverViewModel.cs" />
@@ -108,6 +107,10 @@
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.82" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\TicTacToe.Business\TicTacToe.Business.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -148,10 +151,6 @@
 
 	<ItemGroup>
 	  <None Update="Resources\AppIcon\appicon.svg">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
-	  <None Update="Resources\AppIcon\TicTacToe_Small.png">
 	    <Pack>True</Pack>
 	    <PackagePath>\</PackagePath>
 	  </None>

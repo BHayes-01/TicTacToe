@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Reflection;
-using System.Windows.Input;
 
 namespace TicTacToe.ViewModels
 {
@@ -30,6 +29,11 @@ namespace TicTacToe.ViewModels
         /// Get the author's name
         /// </summary>
         public string Author => "Charles B. Hayes";
+
+        /// <summary>
+        /// Publish date of the application
+        /// </summary>
+        public DateTime PublishDateTime => new DateTime(2026, 8, 1);
 
         /// <summary>
         /// Return the current version number
