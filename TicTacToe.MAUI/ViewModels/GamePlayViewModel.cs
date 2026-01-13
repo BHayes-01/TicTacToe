@@ -247,7 +247,7 @@ namespace TicTacToe.ViewModels
 
             _gamePlay.UpdateInstructions();
 
-            _gamePlay.CheckIfComputerPlay();
+            CheckIfComputerCanPlay();
         }
 
         #endregion Auto Relay Commands from Methods
@@ -263,10 +263,7 @@ namespace TicTacToe.ViewModels
             set
             {
                 if (SetProperty(ref _gamePlay.Board[7], value))
-                {
-                    _gamePlay.CheckIfWinnerOrDraw();
-                    _gamePlay.CheckIfComputerPlay();
-                }
+                    UpdatePlay();
             }
         }
 
@@ -279,10 +276,7 @@ namespace TicTacToe.ViewModels
             set
             {
                 if (SetProperty(ref _gamePlay.Board[4], value))
-                {
-                    _gamePlay.CheckIfWinnerOrDraw();
-                    _gamePlay.CheckIfComputerPlay();
-                }
+                    UpdatePlay();
             }
         }
 
@@ -295,10 +289,7 @@ namespace TicTacToe.ViewModels
             set
             {
                 if (SetProperty(ref _gamePlay.Board[1], value))
-                {
-                    _gamePlay.CheckIfWinnerOrDraw();
-                    _gamePlay.CheckIfComputerPlay();
-                }
+                    UpdatePlay();
             }
         }
 
@@ -311,10 +302,7 @@ namespace TicTacToe.ViewModels
             set
             {
                 if (SetProperty(ref _gamePlay.Board[6], value))
-                {
-                    _gamePlay.CheckIfWinnerOrDraw();
-                    _gamePlay.CheckIfComputerPlay();
-                }
+                    UpdatePlay();
             }
         }
 
@@ -327,10 +315,7 @@ namespace TicTacToe.ViewModels
             set
             {
                 if (SetProperty(ref _gamePlay.Board[3], value))
-                {
-                    _gamePlay.CheckIfWinnerOrDraw();
-                    _gamePlay.CheckIfComputerPlay();
-                }
+                    UpdatePlay();
             }
         }
 
@@ -343,10 +328,7 @@ namespace TicTacToe.ViewModels
             set
             {
                 if (SetProperty(ref _gamePlay.Board[0], value))
-                {
-                    _gamePlay.CheckIfWinnerOrDraw();
-                    _gamePlay.CheckIfComputerPlay();
-                }
+                    UpdatePlay();
             }
         }
 
@@ -359,10 +341,7 @@ namespace TicTacToe.ViewModels
             set
             {
                 if (SetProperty(ref _gamePlay.Board[8], value))
-                {
-                    _gamePlay.CheckIfWinnerOrDraw();
-                    _gamePlay.CheckIfComputerPlay();
-                }
+                    UpdatePlay();
             }
         }
 
@@ -375,10 +354,7 @@ namespace TicTacToe.ViewModels
             set
             {
                 if (SetProperty(ref _gamePlay.Board[5], value))
-                {
-                    _gamePlay.CheckIfWinnerOrDraw();
-                    _gamePlay.CheckIfComputerPlay();
-                }
+                    UpdatePlay();
             }
         }
 
@@ -391,10 +367,31 @@ namespace TicTacToe.ViewModels
             set
             {
                 if (SetProperty(ref _gamePlay.Board[2], value))
-                {
-                    _gamePlay.CheckIfWinnerOrDraw();
-                    _gamePlay.CheckIfComputerPlay();
-                }
+                    UpdatePlay();
+            }
+        }
+
+        /// <summary>
+        /// Update the game board after a square has been picked.
+        /// </summary>
+        private void UpdatePlay()
+        {
+            _gamePlay.CheckIfWinnerOrDraw();
+            CheckIfComputerCanPlay();
+        }
+
+        /// <summary>
+        /// Checks whether the computer is able to play its turn and, if so, initiates the computer's move.
+        /// </summary>
+        /// <remarks>This method introduces a short delay before allowing the computer to play, which can
+        /// be used to simulate thinking time or improve user experience in turn-based games. Intended for internal use
+        /// within the game loop or turn management logic.</remarks>
+        private void CheckIfComputerCanPlay()
+        {
+            if (_gamePlay.CheckIfComputerPlay())
+            {
+                Thread.Sleep(200);  // add delay to computer response;
+                _gamePlay.LetComputerPlayTurn();
             }
         }
 
@@ -407,11 +404,11 @@ namespace TicTacToe.ViewModels
         /// </summary>
         public void UpdateWinningLine()
         {
-            if (WinningSelection == -1) return;
+            if (_gamePlay.WinningSelection == -1) return;
 
             var choiceSize = GridSize / 3;
 
-            switch (WinningSelection)
+            switch (_gamePlay.WinningSelection)
             {
                 case 0:
                     {

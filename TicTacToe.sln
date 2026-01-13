@@ -5,9 +5,11 @@ VisualStudioVersion = 18.1.11304.174
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.MAUI", "TicTacToe.MAUI\TicTacToe.MAUI.csproj", "{6FC202D4-C5D1-4010-B8DE-80A0AC238351}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToeUnitTests", "TicTacToeUnitTests\TicTacToeUnitTests.csproj", "{D411CEB5-6EA3-44CE-8E38-3807AFC595B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.MAUI.UnitTests", "TicTacToe.MAUI.UnitTests\TicTacToe.MAUI.UnitTests.csproj", "{D411CEB5-6EA3-44CE-8E38-3807AFC595B4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe.Business", "TicTacToe.Business\TicTacToe.Business.csproj", "{A9BD4A07-9B81-4673-9BFF-7170BB7728AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe.Business.UnitTests", "TicTacToe.Business.UnitTests\TicTacToe.Business.UnitTests.csproj", "{35D6BCF9-5A00-4113-AA17-F958FF51F0DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{A9BD4A07-9B81-4673-9BFF-7170BB7728AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9BD4A07-9B81-4673-9BFF-7170BB7728AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9BD4A07-9B81-4673-9BFF-7170BB7728AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35D6BCF9-5A00-4113-AA17-F958FF51F0DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35D6BCF9-5A00-4113-AA17-F958FF51F0DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35D6BCF9-5A00-4113-AA17-F958FF51F0DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35D6BCF9-5A00-4113-AA17-F958FF51F0DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

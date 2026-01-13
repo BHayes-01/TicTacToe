@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using TicTacToe.ViewModels;
 
-namespace TicTacToeUnitTests.ViewModels;
+namespace TicTacToe.MAUI.UnitTests.ViewModels;
 
 public class MainPageViewModelUnitTests
 {

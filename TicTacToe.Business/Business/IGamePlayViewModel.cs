@@ -32,11 +32,6 @@ public interface IGamePlayViewModel
     /// </summary>
     bool TwoPlayer { get; set; }
 
-    /// <summary>
-    /// Indicates that a winning combination has been found
-    /// </summary>
-    int WinningSelection { get; set; }
-
     #endregion Auto Properties From Fields
 
     #region Tic-Tac-Toe Square Auto Generated Relay Commands

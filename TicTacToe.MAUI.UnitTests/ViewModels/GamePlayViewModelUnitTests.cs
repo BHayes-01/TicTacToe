@@ -4,7 +4,7 @@ using TicTacToe.Enums;
 using Xunit.Abstractions;
 using System.Text;
 
-namespace TicTacToeUnitTests.ViewModels;
+namespace TicTacToe.MAUI.UnitTests.ViewModels;
 
 public class GamePlayViewModelUnitTests(ITestOutputHelper output)
 {
@@ -1543,7 +1543,6 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     }
 
     #endregion UpdateInstructions
-
 
     #region Helper
 

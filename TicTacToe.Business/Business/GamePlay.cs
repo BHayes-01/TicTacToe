@@ -8,11 +8,6 @@ public class GamePlay(IGamePlayViewModel viewModel)
 
     #region Fields
 
-    private XorO[] _board = new XorO[9];
-    private XorO _computerChoice;
-    private bool _isX;
-    private static readonly Random _random = new();
-
     internal readonly List<SquarePosition[]> _choiceHeirarchy =
         [
             [ SquarePosition.LeftTop, SquarePosition.RightTop, SquarePosition.LeftBottom ],
@@ -35,6 +30,10 @@ public class GamePlay(IGamePlayViewModel viewModel)
             [ SquarePosition.RightTop, SquarePosition.CenterMiddle, SquarePosition.LeftBottom ]
         ];
 
+    private static readonly Random _random = new();
+    private XorO[] _board = new XorO[9];
+    int _winningSelection;
+
     #endregion Fields
 
     #region Properties
@@ -54,11 +53,12 @@ public class GamePlay(IGamePlayViewModel viewModel)
     /// <summary>
     /// Indicates whether the computer is playing as X or O
     /// </summary>
-    public XorO ComputerChoice
-    {
-        get => _computerChoice;
-        set => _computerChoice = value;
-    }
+    public XorO ComputerChoice { get; set; }
+
+    /// <summary>
+    /// Indicates if the current player is X or O
+    /// </summary>
+    public bool IsX { get; set; }
 
     /// <summary>
     /// Indicates if the current turn belongs to the computer
@@ -67,216 +67,36 @@ public class GamePlay(IGamePlayViewModel viewModel)
     {
         get
         {
-            if (_isX && (_computerChoice == XorO.O_Visible)) return false;
-            if (!_isX && (_computerChoice == XorO.X_Visible)) return false;
+            if (IsX && (ComputerChoice == XorO.O_Visible)) return false;
+            if (!IsX && (ComputerChoice == XorO.X_Visible)) return false;
             return true;
         }
     }
 
     /// <summary>
-    /// Indicates if the current player is X or O
+    /// Return a reference to the ViewModel;
     /// </summary>
-    public bool IsX
-    {
-        get => _isX;
-        set => _isX = value;
-    }
+    internal IGamePlayViewModel ViewModel => viewModel;
+
+    /// <summary>
+    /// Indicates that a winning combination has been found
+    /// </summary>
+    public int WinningSelection => _winningSelection;
 
     #endregion Properties
 
     #region Methods
 
     /// <summary>
-    /// Used by the computer to find the best square to choice for its next move.
-    /// </summary>
-    /// <param name="threeChoices">An integer array with three choices.</param>
-    /// <param name="piece">Indicates if the computer game piece is an X or O.</param>
-    /// <returns>An integer into the array of the three choices; otherwise, -1 to indicate a  good choice was not found.</returns>
-    internal SquarePosition CheckBestChoice(SquarePosition[] threeChoices, XorO piece)
-    {
-        // Create a tuple representing the state of the three squares (p0, p1, p2)
-        // where pN is the XorO value on the board for threeChoices[N].
-        var state = (
-            _board[threeChoices[0].ToInt()],
-            _board[threeChoices[1].ToInt()],
-            _board[threeChoices[2].ToInt()]
-        );
-
-        // The switch expression evaluates the 'state' tuple
-        var result = state switch
-        {
-            (XorO.None, var p1, var p2) when p1 == piece && p2 == piece =>
-                0,
-
-            (var p0, XorO.None, var p2) when p0 == piece && p2 == piece =>
-                1,
-
-            (var p0, var p1, XorO.None) when p0 == piece && p1 == piece =>
-                2,
-
-            (XorO.None, XorO.None, var p2) when p2 == piece =>
-                RandomChoice([0, 1]),
-
-            (XorO.None, var p1, XorO.None) when p1 == piece =>
-                RandomChoice([0, 2]),
-
-            (var p0, XorO.None, XorO.None) when p0 == piece =>
-                RandomChoice([1, 2]),
-
-            (XorO.None, var p1, var p2) when p1 == piece && p2 == piece =>
-                0,
-
-            (var p0, XorO.None, var p2) when p0 == piece && p2 == piece =>
-                1,
-
-            (var p0, var p2, XorO.None) when p0 == piece && p2 == piece =>
-                2,
-
-            _ => -1   // Default Case
-        };
-
-
-        if (result == -1)
-            return SquarePosition.Invalid;
-
-        return threeChoices[result];
-    }
-
-    /// <summary>
-    /// Randomly returns one object of the choice of objects
-    /// </summary>
-    /// <typeparam name="T">The object type.</typeparam>
-    /// <param name="choices"></param>
-    /// <returns>An object</returns>
-    internal T RandomChoice<T>(T[] choices)
-    {
-        int index = _random.Next(choices.Count());
-
-        return choices[index];
-    }
-
-    /// <summary>
     /// Check if computer should play next
     /// </summary>
-    public void CheckIfComputerPlay()
+    public bool CheckIfComputerPlay()
     {
-        if (viewModel.TwoPlayer) return;
-        if (viewModel.GameOver) return;
-        if (!IsComputersTurn) return;
+        if (viewModel.TwoPlayer) return false;
+        if (viewModel.GameOver) return false;
+        if (!IsComputersTurn) return false;
 
-        Thread.Sleep(200);  // add delay to computer response;
-        LetComputerPlayTurn();
-    }
-
-    /// <summary>
-    /// Check for best blocking move
-    /// </summary>
-    /// <returns>If found, returns an integer value representing the square; otherwise, -1</returns>
-    internal SquarePosition CheckForBestBlockingMove(XorO computerChoice)
-    {
-        // pick corner edge position if available
-        foreach (var threeInARow in _choiceHeirarchy)
-        {
-            var open = CheckBestChoice(threeInARow, computerChoice);
-            if (open != SquarePosition.Invalid)
-                return open;
-        }
-
-        return SquarePosition.Invalid;
-    }
-
-    /// <summary>
-    /// Check for best blocking move
-    /// </summary>
-    /// <returns>If found, returns an integer value representing the square; otherwise, -1</returns>
-    internal SquarePosition CheckForSpecialBlockingMove(XorO computerChoice, XorO opponentChoice)
-    {
-        if (_board[SquarePosition.CenterMiddle.ToInt()] != computerChoice)
-            return SquarePosition.Invalid;
-
-        if ((_board[SquarePosition.LeftTop.ToInt()] == opponentChoice && _board[SquarePosition.RightBottom.ToInt()] == opponentChoice)
-            || _board[SquarePosition.RightTop.ToInt()] == opponentChoice && _board[SquarePosition.LeftBottom.ToInt()] == opponentChoice)
-        {
-            if (_board[SquarePosition.CenterTop.ToInt()] == XorO.None && _board[SquarePosition.CenterBottom.ToInt()] == XorO.None)
-                return SquarePosition.CenterTop;
-
-            if (_board[SquarePosition.LeftMiddle.ToInt()] == XorO.None && _board[SquarePosition.RightMiddle.ToInt()] == XorO.None)
-                return SquarePosition.LeftMiddle;
-        }
-
-        if ((_board[SquarePosition.CenterTop.ToInt()] == opponentChoice || _board[SquarePosition.RightTop.ToInt()] == opponentChoice)
-            && (_board[SquarePosition.LeftMiddle.ToInt()] == opponentChoice || _board[SquarePosition.LeftBottom.ToInt()] == opponentChoice)
-            && _board[SquarePosition.LeftTop.ToInt()] == XorO.None)
-        {
-            return SquarePosition.LeftTop;
-        }
-
-        if ((_board[SquarePosition.CenterTop.ToInt()] == opponentChoice || _board[SquarePosition.LeftTop.ToInt()] == opponentChoice)
-            && (_board[SquarePosition.RightMiddle.ToInt()] == opponentChoice || _board[SquarePosition.RightBottom.ToInt()] == opponentChoice)
-            && _board[SquarePosition.RightTop.ToInt()] == XorO.None)
-        {
-            return SquarePosition.RightTop;
-        }
-
-        if ((_board[5] == opponentChoice || _board[SquarePosition.RightTop.ToInt()] == opponentChoice)
-            && (_board[SquarePosition.CenterBottom.ToInt()] == opponentChoice || _board[SquarePosition.LeftBottom.ToInt()] == opponentChoice)
-            && _board[SquarePosition.RightBottom.ToInt()] == XorO.None)
-        {
-            return SquarePosition.RightBottom;
-        }
-
-        if ((_board[SquarePosition.CenterBottom.ToInt()] == opponentChoice || _board[SquarePosition.RightBottom.ToInt()] == opponentChoice)
-            && (_board[SquarePosition.LeftMiddle.ToInt()] == opponentChoice || _board[SquarePosition.LeftTop.ToInt()] == opponentChoice)
-            && _board[SquarePosition.LeftBottom.ToInt()] == XorO.None)
-        {
-            return SquarePosition.LeftBottom;
-        }
-
-        return SquarePosition.Invalid;
-    }
-
-    /// <summary>
-    /// Picks a random corner to play in.
-    /// </summary>
-    /// <returns>If found, returns an integer value representing the square; otherwise, -1</returns>
-    internal SquarePosition PickRandomCorner()
-    {
-        if ((viewModel.LeftTopChoice == XorO.None)
-            || (viewModel.RightTopChoice == XorO.None)
-            || (viewModel.LeftBottomChoice == XorO.None)
-            || (viewModel.RightBottomChoice == XorO.None))
-        {
-            int index = _random.Next(4);  // randomly pick between the four choices
-
-            SquarePosition open = SquarePosition.Invalid;
-            while (open == SquarePosition.Invalid)
-            {
-                if (index == 0 && viewModel.LeftTopChoice == XorO.None)
-                {
-                    open = SquarePosition.LeftTop;
-                    break;
-                }
-                if (index <= 1 && viewModel.RightTopChoice == XorO.None)
-                {
-                    open = SquarePosition.RightTop;
-                    break;
-                }
-                if (index <= 2 && viewModel.LeftBottomChoice == XorO.None)
-                {
-                    open = SquarePosition.LeftBottom;
-                    break;
-                }
-                if (index <= 3 && viewModel.RightBottomChoice == XorO.None)
-                {
-                    open = SquarePosition.RightBottom;
-                    break;
-                }
-                if (open == SquarePosition.Invalid) index = 0;
-            }
-            return open;
-        }
-
-        return SquarePosition.Invalid;
+        return true;
     }
 
     /// <summary>
@@ -285,7 +105,7 @@ public class GamePlay(IGamePlayViewModel viewModel)
     public void CheckIfWinnerOrDraw()
     {
 
-        viewModel.WinningSelection = -1;
+        _winningSelection = -1;
 
         int i = 0;
         foreach (var threeInARow in _winningCombinations)
@@ -294,7 +114,7 @@ public class GamePlay(IGamePlayViewModel viewModel)
                 && (_board[threeInARow[0].ToInt()] == _board[threeInARow[1].ToInt()]
                 && _board[threeInARow[0].ToInt()] == _board[threeInARow[2].ToInt()]))
             {
-                viewModel.WinningSelection = i;
+                _winningSelection = i;
                 viewModel.UpdateWinningLine();
                 viewModel.HasWinner = true;
                 viewModel.GameOver = true;
@@ -330,7 +150,7 @@ public class GamePlay(IGamePlayViewModel viewModel)
                     {
                         if (_board2[j] == XorO.None)
                         {
-                            _board2[j] = _isX ? XorO.X_Visible : XorO.O_Visible;
+                            _board2[j] = IsX ? XorO.X_Visible : XorO.O_Visible;
                             break;
                         }
                     }
@@ -347,7 +167,7 @@ public class GamePlay(IGamePlayViewModel viewModel)
 
                     if (!canWin)
                     {
-                        foreach(SquarePosition position in Enum.GetValues(typeof(SquarePosition)))
+                        foreach (SquarePosition position in Enum.GetValues(typeof(SquarePosition)))
                         {
                             if (position == SquarePosition.Invalid)
                                 continue;
@@ -370,38 +190,14 @@ public class GamePlay(IGamePlayViewModel viewModel)
     }
 
     /// <summary>
-    /// Used by the computer to identify that there is one play away from winning.
-    /// </summary>
-    /// <param name="threeInARow">A winning combination of moves.</param>
-    /// <param name="piece">Indicates if the game piece is an X or O.</param>
-    /// <returns>An integer representing the winning move into the array of the three choices; otherwise, -1 to indicate a winning choice was not found.</returns>
-    internal SquarePosition CheckShouldPlay(SquarePosition[] threeInARow, XorO piece)
-    {
-        if ((_board[threeInARow[0].ToInt()] == XorO.None)
-            && (_board[threeInARow[1].ToInt()] == piece) && (_board[threeInARow[2].ToInt()] == piece))
-            return threeInARow[0]; // first option
-
-        if ((_board[threeInARow[0].ToInt()] == piece)
-            && (_board[threeInARow[1].ToInt()] == XorO.None) && (_board[threeInARow[2].ToInt()] == piece))
-            return threeInARow[1]; //second option
-
-        if ((_board[threeInARow[0].ToInt()] == piece)
-            && (_board[threeInARow[1].ToInt()] == piece) && (_board[threeInARow[2].ToInt()] == XorO.None))
-            return threeInARow[2]; // third option
-
-        return SquarePosition.Invalid; // no options
-    }
-
-    /// <summary>
     /// Play as a the computer
     /// </summary>
-    internal void LetComputerPlayTurn()
+    public void LetComputerPlayTurn()
     {
         SquarePosition open;
 
-        var computerChoice = _isX ? XorO.X_Visible : XorO.O_Visible;
-        var opponentChoice = _isX ? XorO.O_Visible : XorO.X_Visible;
-
+        var computerChoice = IsX ? XorO.X_Visible : XorO.O_Visible;
+        var opponentChoice = IsX ? XorO.O_Visible : XorO.X_Visible;
 
         // This should also randomly pick a corner square if the computer goes first.
         // always pick center if open
@@ -479,10 +275,209 @@ public class GamePlay(IGamePlayViewModel viewModel)
         if (viewModel.GameOver) return currentChoice;
         if (currentChoice != XorO.None) return currentChoice;
 
-        _isX = !_isX;
+        IsX = !IsX;
         UpdateInstructions();
 
-        return _isX ? XorO.O_Visible : XorO.X_Visible;
+        return IsX ? XorO.O_Visible : XorO.X_Visible;
+    }
+
+    /// <summary>
+    /// Update the instructions for the next step.
+    /// </summary>
+    public void UpdateInstructions()
+    {
+        var turn = IsX ? "X" : "O";
+        viewModel.Instructions = $"'{turn}' goes next.";
+    }
+
+    /// <summary>
+    /// Used by the computer to find the best square to choice for its next move.
+    /// </summary>
+    /// <param name="threeChoices">An integer array with three choices.</param>
+    /// <param name="piece">Indicates if the computer game piece is an X or O.</param>
+    /// <returns>An integer into the array of the three choices; otherwise, -1 to indicate a  good choice was not found.</returns>
+    internal SquarePosition CheckBestChoice(SquarePosition[] threeChoices, XorO piece)
+    {
+        // Create a tuple representing the state of the three squares (p0, p1, p2)
+        // where pN is the XorO value on the board for threeChoices[N].
+        var state = (
+            _board[threeChoices[0].ToInt()],
+            _board[threeChoices[1].ToInt()],
+            _board[threeChoices[2].ToInt()]
+        );
+
+        // The switch expression evaluates the 'state' tuple
+        var result = state switch
+        {
+            (XorO.None, var p1, var p2) when p1 == piece && p2 == piece =>
+                0,
+
+            (var p0, XorO.None, var p2) when p0 == piece && p2 == piece =>
+                1,
+
+            (var p0, var p1, XorO.None) when p0 == piece && p1 == piece =>
+                2,
+
+            (XorO.None, XorO.None, var p2) when p2 == piece =>
+                RandomChoice([0, 1]),
+
+            (XorO.None, var p1, XorO.None) when p1 == piece =>
+                RandomChoice([0, 2]),
+
+            (var p0, XorO.None, XorO.None) when p0 == piece =>
+                RandomChoice([1, 2]),
+
+            (XorO.None, var p1, var p2) when p1 == piece && p2 == piece =>
+                0,
+
+            (var p0, XorO.None, var p2) when p0 == piece && p2 == piece =>
+                1,
+
+            (var p0, var p2, XorO.None) when p0 == piece && p2 == piece =>
+                2,
+
+            _ => -1   // Default Case
+        };
+
+
+        if (result == -1)
+            return SquarePosition.Invalid;
+
+        return threeChoices[result];
+    }
+
+    /// <summary>
+    /// Check for best blocking move
+    /// </summary>
+    /// <returns>If found, returns an integer value representing the square; otherwise, -1</returns>
+    internal SquarePosition CheckForBestBlockingMove(XorO computerChoice)
+    {
+        // pick corner edge position if available
+        foreach (var threeInARow in _choiceHeirarchy)
+        {
+            var open = CheckBestChoice(threeInARow, computerChoice);
+            if (open != SquarePosition.Invalid)
+                return open;
+        }
+
+        return SquarePosition.Invalid;
+    }
+
+    /// <summary>
+    /// Check for best blocking move
+    /// </summary>
+    /// <returns>If found, returns an integer value representing the square; otherwise, -1</returns>
+    internal SquarePosition CheckForSpecialBlockingMove(XorO computerChoice, XorO opponentChoice)
+    {
+        if (_board[SquarePosition.CenterMiddle.ToInt()] != computerChoice)
+            return SquarePosition.Invalid;
+
+        if ((_board[SquarePosition.LeftTop.ToInt()] == opponentChoice && _board[SquarePosition.RightBottom.ToInt()] == opponentChoice)
+            || _board[SquarePosition.RightTop.ToInt()] == opponentChoice && _board[SquarePosition.LeftBottom.ToInt()] == opponentChoice)
+        {
+            if (_board[SquarePosition.CenterTop.ToInt()] == XorO.None && _board[SquarePosition.CenterBottom.ToInt()] == XorO.None)
+                return SquarePosition.CenterTop;
+
+            if (_board[SquarePosition.LeftMiddle.ToInt()] == XorO.None && _board[SquarePosition.RightMiddle.ToInt()] == XorO.None)
+                return SquarePosition.LeftMiddle;
+        }
+
+        if ((_board[SquarePosition.CenterTop.ToInt()] == opponentChoice || _board[SquarePosition.RightTop.ToInt()] == opponentChoice)
+            && (_board[SquarePosition.LeftMiddle.ToInt()] == opponentChoice || _board[SquarePosition.LeftBottom.ToInt()] == opponentChoice)
+            && _board[SquarePosition.LeftTop.ToInt()] == XorO.None)
+        {
+            return SquarePosition.LeftTop;
+        }
+
+        if ((_board[SquarePosition.CenterTop.ToInt()] == opponentChoice || _board[SquarePosition.LeftTop.ToInt()] == opponentChoice)
+            && (_board[SquarePosition.RightMiddle.ToInt()] == opponentChoice || _board[SquarePosition.RightBottom.ToInt()] == opponentChoice)
+            && _board[SquarePosition.RightTop.ToInt()] == XorO.None)
+        {
+            return SquarePosition.RightTop;
+        }
+
+        if ((_board[5] == opponentChoice || _board[SquarePosition.RightTop.ToInt()] == opponentChoice)
+            && (_board[SquarePosition.CenterBottom.ToInt()] == opponentChoice || _board[SquarePosition.LeftBottom.ToInt()] == opponentChoice)
+            && _board[SquarePosition.RightBottom.ToInt()] == XorO.None)
+        {
+            return SquarePosition.RightBottom;
+        }
+
+        if ((_board[SquarePosition.CenterBottom.ToInt()] == opponentChoice || _board[SquarePosition.RightBottom.ToInt()] == opponentChoice)
+            && (_board[SquarePosition.LeftMiddle.ToInt()] == opponentChoice || _board[SquarePosition.LeftTop.ToInt()] == opponentChoice)
+            && _board[SquarePosition.LeftBottom.ToInt()] == XorO.None)
+        {
+            return SquarePosition.LeftBottom;
+        }
+
+        return SquarePosition.Invalid;
+    }
+
+    /// <summary>
+    /// Used by the computer to identify that there is one play away from winning.
+    /// </summary>
+    /// <param name="threeInARow">A winning combination of moves.</param>
+    /// <param name="piece">Indicates if the game piece is an X or O.</param>
+    /// <returns>An integer representing the winning move into the array of the three choices; otherwise, -1 to indicate a winning choice was not found.</returns>
+    internal SquarePosition CheckShouldPlay(SquarePosition[] threeInARow, XorO piece)
+    {
+        if ((_board[threeInARow[0].ToInt()] == XorO.None)
+            && (_board[threeInARow[1].ToInt()] == piece) && (_board[threeInARow[2].ToInt()] == piece))
+            return threeInARow[0]; // first option
+
+        if ((_board[threeInARow[0].ToInt()] == piece)
+            && (_board[threeInARow[1].ToInt()] == XorO.None) && (_board[threeInARow[2].ToInt()] == piece))
+            return threeInARow[1]; //second option
+
+        if ((_board[threeInARow[0].ToInt()] == piece)
+            && (_board[threeInARow[1].ToInt()] == piece) && (_board[threeInARow[2].ToInt()] == XorO.None))
+            return threeInARow[2]; // third option
+
+        return SquarePosition.Invalid; // no options
+    }
+
+    /// <summary>
+    /// Picks a random corner to play in.
+    /// </summary>
+    /// <returns>If found, returns an integer value representing the square; otherwise, -1</returns>
+    internal SquarePosition PickRandomCorner()
+    {
+        if ((viewModel.LeftTopChoice == XorO.None)
+            || (viewModel.RightTopChoice == XorO.None)
+            || (viewModel.LeftBottomChoice == XorO.None)
+            || (viewModel.RightBottomChoice == XorO.None))
+        {
+            int index = _random.Next(4);  // randomly pick between the four choices
+
+            SquarePosition open = SquarePosition.Invalid;
+            while (open == SquarePosition.Invalid)
+            {
+                if (index == 0 && viewModel.LeftTopChoice == XorO.None)
+                {
+                    open = SquarePosition.LeftTop;
+                    break;
+                }
+                if (index <= 1 && viewModel.RightTopChoice == XorO.None)
+                {
+                    open = SquarePosition.RightTop;
+                    break;
+                }
+                if (index <= 2 && viewModel.LeftBottomChoice == XorO.None)
+                {
+                    open = SquarePosition.LeftBottom;
+                    break;
+                }
+                if (index <= 3 && viewModel.RightBottomChoice == XorO.None)
+                {
+                    open = SquarePosition.RightBottom;
+                    break;
+                }
+                if (open == SquarePosition.Invalid) index = 0;
+            }
+            return open;
+        }
+
+        return SquarePosition.Invalid;
     }
 
     /// <summary>
@@ -546,12 +541,16 @@ public class GamePlay(IGamePlayViewModel viewModel)
     }
 
     /// <summary>
-    /// Update the instructions for the next step.
+    /// Randomly returns one object of the choice of objects
     /// </summary>
-    public void UpdateInstructions()
+    /// <typeparam name="T">The object type.</typeparam>
+    /// <param name="choices"></param>
+    /// <returns>An object</returns>
+    internal T RandomChoice<T>(T[] choices)
     {
-        var turn = _isX ? "X" : "O";
-        viewModel.Instructions = $"'{turn}' goes next.";
+        int index = _random.Next(choices.Count());
+
+        return choices[index];
     }
 
     #endregion Methods
