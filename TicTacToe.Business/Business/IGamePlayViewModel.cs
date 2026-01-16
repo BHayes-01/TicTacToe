@@ -7,30 +7,7 @@ public interface IGamePlayViewModel
 
     #region Auto Properties From Fields
 
-    /// <summary>
-    /// Indicates if the computer starts
-    /// </summary>
-    bool ComputerStarts { get; set; }
-
-    /// <summary>
-    /// Indicates that the game is over
-    /// </summary>
-    bool GameOver { get; set; }
-
-    /// <summary>
-    /// Indicates that the game has a winner, versus a tie
-    /// </summary>
-    bool HasWinner { get; set; }
-
-    /// <summary>
-    /// Brief description of next step that is displayed
-    /// </summary>
-    string Instructions { get; set; }
-
-    /// <summary>
-    /// Indicates if it is a two player game; otherwise, one player
-    /// </summary>
-    bool TwoPlayer { get; set; }
+    GamePlay GamePlay { get; set; }
 
     #endregion Auto Properties From Fields
 
@@ -83,20 +60,6 @@ public interface IGamePlayViewModel
 
     #endregion Tic-Tac-Toe Square Relay Commands
 
-    #region Auto Relay Commands from Methods
-
-    /// <summary>
-    /// PlayAgainClick to default values
-    /// </summary>
-    void PlayAgainClick();
-
-    /// <summary>
-    /// Exit the program
-    /// </summary>
-    void QuitClick();
-
-    #endregion Auto Relay Commands from Methods
-
     #region Tic-Tac-Toe Square Properties
 
     /// <summary>
@@ -147,6 +110,12 @@ public interface IGamePlayViewModel
     #endregion Tic-Tac-Toe Square Properties
 
     #region UI Properties
+
+    /// <summary>
+    /// Run the action on the main thread.
+    /// </summary>
+    /// <param name="action"></param>
+    void RunOnMainThread(Action action);
 
     /// <summary>
     /// Update the position of the winning line.

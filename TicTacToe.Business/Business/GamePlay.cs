@@ -3,7 +3,7 @@ using TicTacToe.Enums;
 
 namespace TicTacToe.Business.Business;
 
-public class GamePlay(IGamePlayViewModel viewModel)
+public class GamePlay(IGamePlayViewModel viewModel) : SupportBaseClass
 {
 
     #region Fields
@@ -32,7 +32,6 @@ public class GamePlay(IGamePlayViewModel viewModel)
 
     private static readonly Random _random = new();
     private XorO[] _board = new XorO[9];
-    int _winningSelection;
 
     #endregion Fields
 
@@ -56,9 +55,14 @@ public class GamePlay(IGamePlayViewModel viewModel)
     public XorO ComputerChoice { get; set; }
 
     /// <summary>
-    /// Indicates if the current player is X or O
+    /// Delay time for computer in milliseconds
     /// </summary>
-    public bool IsX { get; set; }
+    public int DelayMilliseconds { get; set; } = 1000;
+
+    /// <summary>
+    /// Indicates the computer is thinking
+    /// </summary>
+    public bool IsThinking { get; set; }
 
     /// <summary>
     /// Indicates if the current turn belongs to the computer
@@ -67,6 +71,7 @@ public class GamePlay(IGamePlayViewModel viewModel)
     {
         get
         {
+            if (ComputerChoice == XorO.None) return false;
             if (IsX && (ComputerChoice == XorO.O_Visible)) return false;
             if (!IsX && (ComputerChoice == XorO.X_Visible)) return false;
             return true;
@@ -81,9 +86,185 @@ public class GamePlay(IGamePlayViewModel viewModel)
     /// <summary>
     /// Indicates that a winning combination has been found
     /// </summary>
-    public int WinningSelection => _winningSelection;
+    public int WinningSelection { get; set; } = -1;
 
     #endregion Properties
+
+    #region Observable Properties 
+
+    /// <summary>
+    /// Indicates if the computer starts
+    /// </summary>
+    private bool _computerStarts;
+    public bool ComputerStarts
+    {
+        get => _computerStarts;
+        set => viewModel.RunOnMainThread(() => SetProperty(ref _computerStarts, value));
+    }
+
+    /// <summary>
+    /// Indicates that the game is over
+    /// </summary>
+    private bool _gameOver;
+    public bool GameOver
+    {
+        get => _gameOver;
+        set => viewModel.RunOnMainThread(() => SetProperty(ref _gameOver, value));
+    }
+
+    /// <summary>
+    /// Indicates that the game has a winner, versus a tie
+    /// </summary>
+    private bool _hasWinner;
+    public bool HasWinner
+    {
+        get => _hasWinner;
+        set => viewModel.RunOnMainThread(() => SetProperty(ref _hasWinner, value));
+    }
+
+    private string _instructions = string.Empty;
+    /// <summary>
+    /// Brief description of next step that is displayed
+    /// </summary>
+    public string Instructions
+    {
+        get => _instructions;
+        set => viewModel.RunOnMainThread(() => SetProperty(ref _instructions, value));
+    }
+
+    /// <summary>
+    /// Indicates if the current player is X or O
+    /// </summary>
+    private bool _isX;
+    public bool IsX
+    {
+        get => _isX;
+        set => viewModel.RunOnMainThread(() => SetProperty(ref _isX, value));
+    }
+
+    /// <summary>
+    /// Indicates if it is a two player game; otherwise, one player
+    /// </summary>
+    private bool _twoPlayer;
+    public bool TwoPlayer
+    {
+        get => _twoPlayer;
+        set => viewModel.RunOnMainThread(() => SetProperty(ref _twoPlayer, value));
+    }
+
+    #endregion Observable Properties 
+
+    #region Tic-Tac-Toe Square Properties
+
+    /// <summary>
+    /// [7] The current value of the center bottom square
+    /// </summary>
+    public XorO CenterBottomChoice
+    {
+        get => _board[7];
+        set
+        {
+            UpdatePlay(7, value);
+        }
+    }
+
+    /// <summary>
+    /// [4] The current value of the center square
+    /// </summary>
+    public XorO CenterMiddleChoice
+    {
+        get => _board[4];
+        set
+        {
+            UpdatePlay(4, value);
+        }
+    }
+
+    /// <summary>
+    /// [1] The current value of the center top square
+    /// </summary>
+    public XorO CenterTopChoice
+    {
+        get => _board[1];
+        set
+        {
+            UpdatePlay(1, value);
+        }
+    }
+
+    /// <summary>
+    /// [6] The current value of the left side bottom square
+    /// </summary>
+    public XorO LeftBottomChoice
+    {
+        get => _board[6];
+        set
+        {
+            UpdatePlay(6, value);
+        }
+    }
+
+    /// <summary>
+    /// [3] The current value of the left side middle square
+    /// </summary>
+    public XorO LeftMiddleChoice
+    {
+        get => _board[3];
+        set
+        {
+            UpdatePlay(3, value);
+        }
+    }
+
+    /// <summary>
+    /// [0] The current value of the left side top square
+    /// </summary>
+    public XorO LeftTopChoice
+    {
+        get => _board[0];
+        set
+        {
+            UpdatePlay(0, value);
+        }
+    }
+
+    /// <summary>
+    /// [8] The current value of the right side bottom square
+    /// </summary>
+    public XorO RightBottomChoice
+    {
+        get => _board[8];
+        set
+        {
+            UpdatePlay(8, value);
+        }
+    }
+
+    /// <summary>
+    /// [5] The current value of the right side middle square
+    /// </summary>
+    public XorO RightMiddleChoice
+    {
+        get => _board[5];
+        set
+        {
+            UpdatePlay(5, value);
+        }
+    }
+
+    /// <summary>
+    /// [2] The current value of the right side top square
+    /// </summary>
+    public XorO RightTopChoice
+    {
+        get => _board[2];
+        set
+        {
+            UpdatePlay(2, value);
+        }
+    }
+
+    #endregion Tic-Tac-Toe Square Properties
 
     #region Methods
 
@@ -92,8 +273,8 @@ public class GamePlay(IGamePlayViewModel viewModel)
     /// </summary>
     public bool CheckIfComputerPlay()
     {
-        if (viewModel.TwoPlayer) return false;
-        if (viewModel.GameOver) return false;
+        if (TwoPlayer) return false;
+        if (GameOver) return false;
         if (!IsComputersTurn) return false;
 
         return true;
@@ -102,10 +283,9 @@ public class GamePlay(IGamePlayViewModel viewModel)
     /// <summary>
     /// Check if there is a winner of the game is a tie
     /// </summary>
-    public void CheckIfWinnerOrDraw()
+    internal void CheckIfWinnerOrDraw()
     {
-
-        _winningSelection = -1;
+        WinningSelection = -1;
 
         int i = 0;
         foreach (var threeInARow in _winningCombinations)
@@ -114,18 +294,18 @@ public class GamePlay(IGamePlayViewModel viewModel)
                 && (_board[threeInARow[0].ToInt()] == _board[threeInARow[1].ToInt()]
                 && _board[threeInARow[0].ToInt()] == _board[threeInARow[2].ToInt()]))
             {
-                _winningSelection = i;
+                WinningSelection = i;
                 viewModel.UpdateWinningLine();
-                viewModel.HasWinner = true;
-                viewModel.GameOver = true;
+                HasWinner = true;
+                GameOver = true;
 
-                viewModel.Instructions = $"'{(_board[threeInARow[0].ToInt()] == XorO.X_Visible ? "X" : "O")}' Wins";
+                Instructions = $"'{(_board[threeInARow[0].ToInt()] == XorO.X_Visible ? "X" : "O")}' Wins";
                 break;
             }
             i++;
         }
 
-        if (!viewModel.GameOver)
+        if (!GameOver)
         {
             var count = _board.Count(o => o == XorO.None);
 
@@ -135,8 +315,8 @@ public class GamePlay(IGamePlayViewModel viewModel)
                 if (isTie)
                 {
                     // all possible moved made, so game is a tie.
-                    viewModel.GameOver = true;
-                    viewModel.Instructions = "Tie";
+                    GameOver = true;
+                    Instructions = "Tie";
                 }
                 else
                 {
@@ -179,8 +359,8 @@ public class GamePlay(IGamePlayViewModel viewModel)
                             }
                         }
 
-                        viewModel.GameOver = true;
-                        viewModel.Instructions = "Tie";
+                        GameOver = true;
+                        Instructions = "Tie";
                     }
 
                 }
@@ -192,7 +372,7 @@ public class GamePlay(IGamePlayViewModel viewModel)
     /// <summary>
     /// Play as a the computer
     /// </summary>
-    public void LetComputerPlayTurn()
+    internal void LetComputerPlayTurn()
     {
         SquarePosition open;
 
@@ -201,7 +381,7 @@ public class GamePlay(IGamePlayViewModel viewModel)
 
         // This should also randomly pick a corner square if the computer goes first.
         // always pick center if open
-        if (viewModel.CenterMiddleChoice == XorO.None)
+        if (CenterMiddleChoice == XorO.None)
         {
             Play(SquarePosition.CenterMiddle);
             return;
@@ -266,19 +446,50 @@ public class GamePlay(IGamePlayViewModel viewModel)
     }
 
     /// <summary>
-    /// Handles the selection of a square
+    /// Resets values to play again
     /// </summary>
-    /// <param name="currentChoice">The current value of the square</param>
-    /// <returns>The new value of the square.</returns>
-    public XorO PickSquare(XorO currentChoice)
+    public void PlayAgain()
     {
-        if (viewModel.GameOver) return currentChoice;
-        if (currentChoice != XorO.None) return currentChoice;
+        IsX = false;
+        HasWinner = false;
+        GameOver = false;
+        IsThinking = false;
 
-        IsX = !IsX;
+        WinningSelection = -1;
+        ComputerChoice = ComputerStarts ? XorO.O_Visible : XorO.X_Visible;
+        for (int i = 0; i < Board.Count(); i++)
+        {
+            Board[i] = XorO.None;
+        }
+
         UpdateInstructions();
 
-        return IsX ? XorO.O_Visible : XorO.X_Visible;
+        CheckIfComputerCanPlay();
+    }
+
+    /// <summary>
+    /// Give a lsight pause before the computer plays
+    /// </summary>
+    /// <param name="action"></param>
+    internal async Task PretendComputerIsThinking(Action action)
+    {
+        if (IsThinking)
+            return;
+        
+        IsThinking = true;
+
+        var isComputersTurn = !CheckIfComputerPlay();
+        
+        // only delay if the computer is going to play
+        if (!GameOver && DelayMilliseconds > 0 && isComputersTurn)
+        {
+            UpdateInstructionsReverse();
+            await Task.Delay(DelayMilliseconds);
+            UpdateInstructions();
+        }
+
+        IsThinking = false;
+        action();
     }
 
     /// <summary>
@@ -286,8 +497,18 @@ public class GamePlay(IGamePlayViewModel viewModel)
     /// </summary>
     public void UpdateInstructions()
     {
+        if (GameOver) return;
+        
         var turn = IsX ? "X" : "O";
-        viewModel.Instructions = $"'{turn}' goes next.";
+        Instructions = $"'{turn}' goes next.";
+    }
+
+    public void UpdateInstructionsReverse()
+    {
+        if (GameOver) return;
+
+        var turn = IsX ? "O" : "X";
+        Instructions = $"'{turn}' goes next.";
     }
 
     /// <summary>
@@ -442,32 +663,32 @@ public class GamePlay(IGamePlayViewModel viewModel)
     /// <returns>If found, returns an integer value representing the square; otherwise, -1</returns>
     internal SquarePosition PickRandomCorner()
     {
-        if ((viewModel.LeftTopChoice == XorO.None)
-            || (viewModel.RightTopChoice == XorO.None)
-            || (viewModel.LeftBottomChoice == XorO.None)
-            || (viewModel.RightBottomChoice == XorO.None))
+        if ((LeftTopChoice == XorO.None)
+            || (RightTopChoice == XorO.None)
+            || (LeftBottomChoice == XorO.None)
+            || (RightBottomChoice == XorO.None))
         {
             int index = _random.Next(4);  // randomly pick between the four choices
 
             SquarePosition open = SquarePosition.Invalid;
             while (open == SquarePosition.Invalid)
             {
-                if (index == 0 && viewModel.LeftTopChoice == XorO.None)
+                if (index == 0 && LeftTopChoice == XorO.None)
                 {
                     open = SquarePosition.LeftTop;
                     break;
                 }
-                if (index <= 1 && viewModel.RightTopChoice == XorO.None)
+                if (index <= 1 && RightTopChoice == XorO.None)
                 {
                     open = SquarePosition.RightTop;
                     break;
                 }
-                if (index <= 2 && viewModel.LeftBottomChoice == XorO.None)
+                if (index <= 2 && LeftBottomChoice == XorO.None)
                 {
                     open = SquarePosition.LeftBottom;
                     break;
                 }
-                if (index <= 3 && viewModel.RightBottomChoice == XorO.None)
+                if (index <= 3 && RightBottomChoice == XorO.None)
                 {
                     open = SquarePosition.RightBottom;
                     break;
@@ -486,51 +707,53 @@ public class GamePlay(IGamePlayViewModel viewModel)
     /// <param name="choice">An integer that represents a tic-tac-toe square position.</param>
     internal void Play(SquarePosition choice)
     {
+        if (IsThinking) return; // disable board while thinking;
+
         switch (choice)
         {
             case SquarePosition.LeftTop:
                 {
-                    viewModel.LeftTopChoice = PickSquare(viewModel.LeftTopChoice);
+                    viewModel.LeftTopChoice = SetSquare();
                     break;
                 }
             case SquarePosition.CenterTop:
                 {
-                    viewModel.CenterTopChoice = PickSquare(viewModel.CenterTopChoice);
+                    viewModel.CenterTopChoice = SetSquare();
                     break;
                 }
             case SquarePosition.RightTop:
                 {
-                    viewModel.RightTopChoice = PickSquare(viewModel.RightTopChoice);
+                    viewModel.RightTopChoice = SetSquare();
                     break;
                 }
             case SquarePosition.LeftMiddle:
                 {
-                    viewModel.LeftMiddleChoice = PickSquare(viewModel.LeftMiddleChoice);
+                    viewModel.LeftMiddleChoice = SetSquare();
                     break;
                 }
             case SquarePosition.CenterMiddle:
                 {
-                    viewModel.CenterMiddleChoice = PickSquare(viewModel.CenterMiddleChoice);
+                    viewModel.CenterMiddleChoice = SetSquare();
                     break;
                 }
             case SquarePosition.RightMiddle:
                 {
-                    viewModel.RightMiddleChoice = PickSquare(viewModel.RightMiddleChoice);
+                    viewModel.RightMiddleChoice = SetSquare();
                     break;
                 }
             case SquarePosition.LeftBottom:
                 {
-                    viewModel.LeftBottomChoice = PickSquare(viewModel.LeftBottomChoice);
+                    viewModel.LeftBottomChoice = SetSquare();
                     break;
                 }
             case SquarePosition.CenterBottom:
                 {
-                    viewModel.CenterBottomChoice = PickSquare(viewModel.CenterBottomChoice);
+                    viewModel.CenterBottomChoice = SetSquare();
                     break;
                 }
             case SquarePosition.RightBottom:
                 {
-                    viewModel.RightBottomChoice = PickSquare(viewModel.RightBottomChoice);
+                    viewModel.RightBottomChoice = SetSquare();
                     break;
                 }
 
@@ -538,6 +761,11 @@ public class GamePlay(IGamePlayViewModel viewModel)
                 Debug.WriteLine("Invalid Choice");
                 break;
         }
+    }
+
+    private XorO SetSquare()
+    {
+        return IsX ? XorO.X_Visible : XorO.O_Visible;
     }
 
     /// <summary>
@@ -551,6 +779,36 @@ public class GamePlay(IGamePlayViewModel viewModel)
         int index = _random.Next(choices.Count());
 
         return choices[index];
+    }
+
+    /// <summary>
+    /// Update the game board after a square has been picked.
+    /// </summary>
+    internal void UpdatePlay(int square, XorO value)
+    {
+        if (IsThinking) return; // disable board while thinking;
+
+        _board[square] = value;
+        _ = PretendComputerIsThinking(() =>
+            {
+                IsX = !IsX;
+                UpdateInstructions();
+                CheckIfComputerCanPlay();
+                CheckIfWinnerOrDraw();
+            }
+        );
+    }
+
+    /// <summary>
+    /// Checks whether the computer is able to play its turn and, if so, initiates the computer's move.
+    /// </summary>
+    /// <remarks>This method introduces a short delay before allowing the computer to play, which can
+    /// be used to simulate thinking time or improve user experience in turn-based games. Intended for internal use
+    /// within the game loop or turn management logic.</remarks>
+    internal void CheckIfComputerCanPlay()
+    {
+        if (CheckIfComputerPlay())
+            LetComputerPlayTurn();
     }
 
     #endregion Methods

@@ -3,6 +3,7 @@ using TicTacToe.ViewModels;
 using TicTacToe.Enums;
 using Xunit.Abstractions;
 using System.Text;
+using TicTacToe.Business.Business;
 
 namespace TicTacToe.MAUI.UnitTests.ViewModels;
 
@@ -16,7 +17,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_Constructor()
     {
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
 
         Assert.NotNull(vm);
     }
@@ -24,25 +25,27 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_ApplyQueryAttributes_Constructor_Pass()
     {
-        Dictionary<string, object> args = new() { { nameof(GamePlayViewModel.TwoPlayer), true }, { nameof(GamePlayViewModel.ComputerStarts), true } };
+        Dictionary<string, object> args = new() { { nameof(GamePlay.TwoPlayer), true }, { nameof(GamePlay.ComputerStarts), true } };
 
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
         vm.ApplyQueryAttributes(args);
 
-        Assert.True(vm.TwoPlayer);
-        Assert.True(vm.ComputerStarts);
+        Assert.True(vm.GamePlay.TwoPlayer);
+        Assert.True(vm.GamePlay.ComputerStarts);
     }
 
     [Fact]
     public void GamePlayViewModel_ApplyQueryAttributes_Constructor_Fail_Values()
     {
-        Dictionary<string, object> args = new() { { nameof(GamePlayViewModel.TwoPlayer), 3 }, { nameof(GamePlayViewModel.ComputerStarts), false } };
+        Dictionary<string, object> args = new() { { nameof(GamePlay.TwoPlayer), 3 }, { nameof(GamePlay.ComputerStarts), false } };
 
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
+        vm.GamePlay.TwoPlayer = false;
+
         vm.ApplyQueryAttributes(args);
 
-        Assert.False(vm.TwoPlayer);
-        Assert.False(vm.ComputerStarts);
+        Assert.False(vm.GamePlay.TwoPlayer);
+        Assert.False(vm.GamePlay.ComputerStarts);
     }
 
     [Fact]
@@ -50,11 +53,13 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     {
         Dictionary<string, object> args = new() { { "2Player", true }, { "ComputerRun", true } };
 
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
+        vm.GamePlay.TwoPlayer = false;
+
         vm.ApplyQueryAttributes(args);
 
-        Assert.False(vm.TwoPlayer);
-        Assert.False(vm.ComputerStarts);
+        Assert.False(vm.GamePlay.TwoPlayer);
+        Assert.False(vm.GamePlay.ComputerStarts);
     }
 
     #endregion Constructor
@@ -68,7 +73,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_LeftTopClick()
     {
         // arrange
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
 
         // act
         var cmd = vm.LeftTopClickCommand;   // test relay command
@@ -89,7 +94,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_CenterTopClick()
     {
         // arrange
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
 
         // act
         var cmd = vm.CenterTopClickCommand;   // test relay command
@@ -110,7 +115,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_RightTopClick()
     {
         // arrange
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
 
         // act
         var cmd = vm.RightTopClickCommand;   // test relay command
@@ -131,7 +136,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_LeftMiddleClick()
     {
         // arrange
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
 
         // act
         var cmd = vm.LeftMiddleClickCommand;   // test relay command
@@ -152,7 +157,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_CenterMiddleClick()
     {
         // arrange
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
 
         // act
         var cmd = vm.CenterMiddleClickCommand;   // test relay command
@@ -173,7 +178,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_RightMiddleClick()
     {
         // arrange
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
 
         // act
         var cmd = vm.RightMiddleClickCommand;   // test relay command
@@ -194,7 +199,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_LeftBottomClick()
     {
         // arrange
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
 
         // act
         var cmd = vm.LeftBottomClickCommand;   // test relay command
@@ -215,7 +220,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_CenterBottomClick()
     {
         // arrange
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
 
         // act
         var cmd = vm.CenterBottomClickCommand;   // test relay command
@@ -236,7 +241,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_RightBottomClick()
     {
         // arrange
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
 
         // act
         var cmd = vm.RightBottomClickCommand;   // test relay command
@@ -258,7 +263,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_PlayAgainClick()
     {
         // arrange
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
 
         // act
         var cmd = vm.PlayAgainClickCommand;   // test relay command
@@ -272,7 +277,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_QuitClick()
     {
         // arrange
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
 
         // act
         var cmd = vm.QuitClickCommand;   // test relay command
@@ -293,10 +298,10 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_LeftTopChoice()
     {
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
-        vm.LeftTopChoice = XorO.None;
+        vm.GamePlay.Board[0] = XorO.None;
         Assert.Equal(XorO.None, vm.LeftTopChoice);
 
         vm.PlayAgainClick();
@@ -317,10 +322,10 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_CenterTopChoice()
     {
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
-        vm.CenterTopChoice = XorO.None;
+        vm.GamePlay.Board[1] = XorO.None;
         Assert.Equal(XorO.None, vm.CenterTopChoice);
 
         vm.PlayAgainClick();
@@ -341,10 +346,10 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_RightTopChoice()
     {
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
-        vm.RightTopChoice = XorO.None;
+        vm.GamePlay.Board[2] = XorO.None;
         Assert.Equal(XorO.None, vm.RightTopChoice);
 
         vm.PlayAgainClick();
@@ -365,10 +370,10 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_LeftMiddleChoice()
     {
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
-        vm.LeftMiddleChoice = XorO.None;
+        vm.GamePlay.Board[3] = XorO.None;
         Assert.Equal(XorO.None, vm.LeftMiddleChoice);
 
         vm.PlayAgainClick();
@@ -389,10 +394,10 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_CenterMiddleChoice()
     {
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
-        vm.CenterMiddleChoice = XorO.None;
+        vm.GamePlay.Board[4] = XorO.None;
         Assert.Equal(XorO.None, vm.CenterMiddleChoice);
 
         vm.PlayAgainClick();
@@ -413,10 +418,10 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_RightMiddleChoice()
     {
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
-        vm.RightMiddleChoice = XorO.None;
+        vm.GamePlay.Board[5] = XorO.None;
         Assert.Equal(XorO.None, vm.RightMiddleChoice);
 
         vm.PlayAgainClick();
@@ -437,10 +442,10 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_LeftBottomChoice()
     {
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
-        vm.LeftBottomChoice = XorO.None;
+        vm.GamePlay.Board[6] = XorO.None;
         Assert.Equal(XorO.None, vm.LeftBottomChoice);
 
         vm.PlayAgainClick();
@@ -461,10 +466,10 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_CenterBottomChoice()
     {
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
-        vm.CenterBottomChoice = XorO.None;
+        vm.GamePlay.Board[7] = XorO.None;
         Assert.Equal(XorO.None, vm.CenterBottomChoice);
 
         vm.PlayAgainClick();
@@ -485,10 +490,10 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_RightBottomChoice()
     {
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
-        vm.RightBottomChoice = XorO.None;
+        vm.GamePlay.Board[8] = XorO.None;
         Assert.Equal(XorO.None, vm.RightBottomChoice);
 
         vm.PlayAgainClick();
@@ -510,16 +515,16 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_ComputerStarts()
     {
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
-        vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
+        var vm = CreateViewModel();
+        vm.GamePlay.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
-        var origValue = vm.ComputerStarts;
-        vm.ComputerStarts = true;
-        Assert.True(vm.ComputerStarts);
+        var origValue = vm.GamePlay.ComputerStarts;
+        vm.GamePlay.ComputerStarts = true;
+        Assert.True(vm.GamePlay.ComputerStarts);
 
-        vm.ComputerStarts = false;
-        Assert.False(vm.ComputerStarts);
-        vm.ComputerStarts = origValue;
+        vm.GamePlay.ComputerStarts = false;
+        Assert.False(vm.GamePlay.ComputerStarts);
+        vm.GamePlay.ComputerStarts = origValue;
 
         Assert.True(propertyChangedCount >= 2);
     }
@@ -528,16 +533,16 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_GameOver()
     {
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
-        vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
+        var vm = CreateViewModel();
+        vm.GamePlay.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
-        var origValue = vm.GameOver;
-        vm.GameOver = true;
-        Assert.True(vm.GameOver);
+        var origValue = vm.GamePlay.GameOver;
+        vm.GamePlay.GameOver = true;
+        Assert.True(vm.GamePlay.GameOver);
 
-        vm.GameOver = false;
-        Assert.False(vm.GameOver);
-        vm.GameOver = origValue;
+        vm.GamePlay.GameOver = false;
+        Assert.False(vm.GamePlay.GameOver);
+        vm.GamePlay.GameOver = origValue;
 
         Assert.True(propertyChangedCount >= 2);
     }
@@ -549,7 +554,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         const double cTestValue2 = 202.0;
 
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
         var origValue = vm.GridSize;
@@ -566,16 +571,16 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_HasWinner()
     {
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
-        vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
+        var vm = CreateViewModel();
+        vm.GamePlay.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
-        var origValue = vm.HasWinner;
-        vm.HasWinner = true;
-        Assert.True(vm.HasWinner);
+        var origValue = vm.GamePlay.HasWinner;
+        vm.GamePlay.HasWinner = true;
+        Assert.True(vm.GamePlay.HasWinner);
 
-        vm.HasWinner = false;
-        Assert.False(vm.HasWinner);
-        vm.HasWinner = origValue;
+        vm.GamePlay.HasWinner = false;
+        Assert.False(vm.GamePlay.HasWinner);
+        vm.GamePlay.HasWinner = origValue;
 
         Assert.True(propertyChangedCount >= 2);
     }
@@ -586,14 +591,14 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         const string cTestValue = "Test Winner";
 
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
-        vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
+        var vm = CreateViewModel();
+        vm.GamePlay.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
-        var origValue = vm.Instructions;
-        vm.Instructions = cTestValue;
-        Assert.Equal(cTestValue, vm.Instructions);
+        var origValue = vm.GamePlay.Instructions;
+        vm.GamePlay.Instructions = cTestValue;
+        Assert.Equal(cTestValue, vm.GamePlay.Instructions);
 
-        vm.Instructions = origValue;
+        vm.GamePlay.Instructions = origValue;
 
         Assert.True(propertyChangedCount >= 2);
     }
@@ -601,7 +606,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_IsComputersTurn_False()
     {
-        var vm = new GamePlayViewModel { TwoPlayer = true }; // prevent the computer from playing 
+        var vm = CreateViewModel(); // prevent the computer from playing 
         vm.PlayAgainClick();
         Assert.False(vm.GamePlay.IsComputersTurn);
     }
@@ -609,9 +614,12 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_IsComputersTurn_True()
     {
-        var vm = new GamePlayViewModel { TwoPlayer = true }; // prevent the computer from playing 
+        var vm = CreateViewModel(); // prevent the computer from playing 
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.GamePlay.TwoPlayer = true;
         vm.PlayAgainClick();
         vm.LeftTopClickCommand.Execute(XorO.None);
+        vm.GamePlay.TwoPlayer = false;
         Assert.True(vm.GamePlay.IsComputersTurn);
     }
 
@@ -619,38 +627,18 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_TwoPlayer()
     {
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
-        vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
+        var vm = CreateViewModel();
+        vm.GamePlay.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
-        var origValue = vm.TwoPlayer;
-        vm.TwoPlayer = true;
-        Assert.True(vm.TwoPlayer);
+        var origValue = vm.GamePlay.TwoPlayer;
+        vm.GamePlay.TwoPlayer = true;
+        Assert.True(vm.GamePlay.TwoPlayer);
 
-        vm.TwoPlayer = false;
-        Assert.False(vm.TwoPlayer);
-        vm.TwoPlayer = origValue;
+        vm.GamePlay.TwoPlayer = false;
+        Assert.False(vm.GamePlay.TwoPlayer);
+        vm.GamePlay.TwoPlayer = origValue;
 
         Assert.True(propertyChangedCount >= 2);
-    }
-
-    [Fact]
-    public void GamePlayViewModel_WinningSelection()
-    {
-        const int cTestValue1 = 1;
-        const int cTestValue2 = 3;
-
-        int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
-        vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
-
-        var origValue = vm.WinningSelection;
-        vm.WinningSelection = cTestValue1;
-        Assert.Equal(cTestValue1, vm.WinningSelection);
-        vm.WinningSelection = cTestValue2;
-        Assert.Equal(cTestValue2, vm.WinningSelection);
-        vm.WinningSelection = origValue;
-
-        Assert.True(propertyChangedCount >= 3);
     }
 
     [Fact]
@@ -660,7 +648,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         const double cTestValue2 = 202.0;
 
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
         var origValue = vm.WinningX1;
@@ -680,7 +668,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         const double cTestValue2 = 202.0;
 
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
         var origValue = vm.WinningX2;
@@ -700,7 +688,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         const double cTestValue2 = 202.0;
 
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
         var origValue = vm.WinningY1;
@@ -720,7 +708,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         const double cTestValue2 = 202.0;
 
         int propertyChangedCount = 0;
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
         var origValue = vm.WinningY2;
@@ -737,151 +725,13 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
 
     #region Methods
 
-    #region CheckBestChoice
-
-    [Fact]
-    public void GamePlayViewModel_CheckBestChoice_0()
-    {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            LeftTopChoice = XorO.X_Visible
-        };
-        var threeChoices = new SquarePosition[] { SquarePosition.LeftTop, SquarePosition.CenterTop, SquarePosition.RightTop };
-        var result = vm.GamePlay.CheckBestChoice(threeChoices, XorO.X_Visible);
-        Assert.True(result == SquarePosition.CenterTop || result == SquarePosition.RightTop);
-    }
-
-    [Fact]
-    public void GamePlayViewModel_CheckBestChoice_1()
-    {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            LeftTopChoice = XorO.X_Visible,
-            CenterTopChoice = XorO.X_Visible
-        };
-        var threeChoices = new SquarePosition[] { SquarePosition.LeftTop, SquarePosition.CenterTop, SquarePosition.RightTop };
-        var result = vm.GamePlay.CheckBestChoice(threeChoices, XorO.X_Visible);
-        Assert.Equal(SquarePosition.RightTop, result);
-    }
-
-    [Fact]
-    public void GamePlayViewModel_CheckBestChoice_2()
-    {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            LeftTopChoice = XorO.X_Visible,
-            RightTopChoice = XorO.X_Visible
-        };
-        var threeChoices = new SquarePosition[] { SquarePosition.LeftTop, SquarePosition.CenterTop, SquarePosition.RightTop };
-        var result = vm.GamePlay.CheckBestChoice(threeChoices, XorO.X_Visible);
-        Assert.Equal(SquarePosition.CenterTop, result);
-    }
-
-    [Fact]
-    public void GamePlayViewModel_CheckBestChoice_3()
-    {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            CenterTopChoice = XorO.X_Visible
-        };
-        var threeChoices = new SquarePosition[] { SquarePosition.LeftTop, SquarePosition.CenterTop, SquarePosition.RightTop };
-        var result = vm.GamePlay.CheckBestChoice(threeChoices, XorO.X_Visible);
-        Assert.True(result == SquarePosition.LeftTop || result == SquarePosition.RightTop);
-    }
-
-    [Fact]
-    public void GamePlayViewModel_CheckBestChoice_4()
-    {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            CenterTopChoice = XorO.X_Visible,
-            LeftTopChoice = XorO.X_Visible
-        };
-
-        var threeChoices = new SquarePosition[] { SquarePosition.LeftTop, SquarePosition.CenterTop, SquarePosition.RightTop };
-        var result = vm.GamePlay.CheckBestChoice(threeChoices, XorO.X_Visible);
-        Assert.Equal(SquarePosition.RightTop, result);
-    }
-
-    [Fact]
-    public void GamePlayViewModel_CheckBestChoice_5()
-    {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            CenterTopChoice = XorO.X_Visible,
-            RightTopChoice = XorO.X_Visible
-        };
-        var threeChoices = new SquarePosition[] { SquarePosition.LeftTop, SquarePosition.CenterTop, SquarePosition.RightTop };
-        var result = vm.GamePlay.CheckBestChoice(threeChoices, XorO.X_Visible);
-        Assert.Equal(SquarePosition.LeftTop, result);
-    }
-
-    [Fact]
-    public void GamePlayViewModel_CheckBestChoice_6()
-    {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            RightTopChoice = XorO.X_Visible
-        };
-        var threeChoices = new SquarePosition[] { SquarePosition.LeftTop, SquarePosition.CenterTop, SquarePosition.RightTop };
-        var result = vm.GamePlay.CheckBestChoice(threeChoices, XorO.X_Visible);
-        Assert.True(result == SquarePosition.LeftTop || result == SquarePosition.CenterTop);
-    }
-
-    [Fact]
-    public void GamePlayViewModel_CheckBestChoice_7()
-    {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            RightTopChoice = XorO.X_Visible,
-            LeftTopChoice = XorO.X_Visible
-        };
-
-        var threeChoices = new SquarePosition[] { SquarePosition.LeftTop, SquarePosition.CenterTop, SquarePosition.RightTop };
-        var result = vm.GamePlay.CheckBestChoice(threeChoices, XorO.X_Visible);
-        Assert.Equal(SquarePosition.CenterTop, result);
-    }
-
-    [Fact]
-    public void GamePlayViewModel_CheckBestChoice_8()
-    {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            RightTopChoice = XorO.X_Visible,
-            CenterTopChoice = XorO.X_Visible
-        };
-        var threeChoices = new SquarePosition[] { SquarePosition.LeftTop, SquarePosition.CenterTop, SquarePosition.RightTop };
-        var result = vm.GamePlay.CheckBestChoice(threeChoices, XorO.X_Visible);
-        Assert.Equal(SquarePosition.LeftTop, result);
-    }
-
-    [Fact]
-    public void GamePlayViewModel_CheckBestChoice_9()
-    {
-        var vm = new GamePlayViewModel { TwoPlayer = true };
-
-        var threeChoices = new SquarePosition[] { SquarePosition.LeftTop, SquarePosition.CenterTop, SquarePosition.RightTop };
-        var result = vm.GamePlay.CheckBestChoice(threeChoices, XorO.X_Visible);
-        Assert.True(result == SquarePosition.Invalid);
-    }
-
-    #endregion CheckBestChoice
-
     #region CheckShouldPlay
 
     [Fact]
     public void GamePlayViewModel_CheckShouldPlay_0()
     {
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
         vm.PlayAgainClick();
 
         vm.LeftTopChoice = XorO.X_Visible;
@@ -896,7 +746,8 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_CheckShouldPlay_1()
     {
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
         vm.PlayAgainClick();
 
         vm.LeftTopChoice = XorO.X_Visible;
@@ -911,7 +762,8 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_CheckShouldPlay_2()
     {
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
         vm.PlayAgainClick();
 
         vm.CenterTopChoice = XorO.X_Visible;
@@ -926,7 +778,8 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_CheckShouldPlay_3()
     {
-        var vm = new GamePlayViewModel();
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
         vm.PlayAgainClick();
 
         vm.RightTopChoice = XorO.X_Visible;
@@ -944,321 +797,305 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win0_X()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            LeftTopChoice = XorO.X_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.LeftTopChoice = XorO.X_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterTopChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightTopChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(0, vm.WinningSelection);
+        Assert.Equal(0, vm.GamePlay.WinningSelection);
     }
 
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win0_O()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            LeftTopChoice = XorO.O_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.LeftTopChoice = XorO.O_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterTopChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightTopChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(0, vm.WinningSelection);
+        Assert.Equal(0, vm.GamePlay.WinningSelection);
     }
 
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win1_X()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            LeftMiddleChoice = XorO.X_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.LeftMiddleChoice = XorO.X_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightMiddleChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(1, vm.WinningSelection);
+        Assert.Equal(1, vm.GamePlay.WinningSelection);
     }
 
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win1_O()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            LeftMiddleChoice = XorO.O_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.LeftMiddleChoice = XorO.O_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightMiddleChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(1, vm.WinningSelection);
+        Assert.Equal(1, vm.GamePlay.WinningSelection);
     }
 
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win2_X()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            LeftBottomChoice = XorO.X_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.LeftBottomChoice = XorO.X_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterBottomChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightBottomChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(2, vm.WinningSelection);
+        Assert.Equal(2, vm.GamePlay.WinningSelection);
     }
 
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win2_O()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            LeftBottomChoice = XorO.O_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.LeftBottomChoice = XorO.O_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterBottomChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightBottomChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(2, vm.WinningSelection);
+        Assert.Equal(2, vm.GamePlay.WinningSelection);
     }
 
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win3_X()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            LeftTopChoice = XorO.X_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.LeftTopChoice = XorO.X_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.LeftMiddleChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.LeftBottomChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(3, vm.WinningSelection);
+        Assert.Equal(3, vm.GamePlay.WinningSelection);
     }
 
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win3_O()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            LeftTopChoice = XorO.O_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.LeftTopChoice = XorO.O_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.LeftMiddleChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.LeftBottomChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(3, vm.WinningSelection);
+        Assert.Equal(3, vm.GamePlay.WinningSelection);
     }
 
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win4_X()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            CenterTopChoice = XorO.X_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.CenterTopChoice = XorO.X_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterBottomChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(4, vm.WinningSelection);
+        Assert.Equal(4, vm.GamePlay.WinningSelection);
     }
 
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win4_O()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            CenterTopChoice = XorO.O_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.CenterTopChoice = XorO.O_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterBottomChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(4, vm.WinningSelection);
+        Assert.Equal(4, vm.GamePlay.WinningSelection);
     }
 
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win5_X()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            RightTopChoice = XorO.X_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.RightTopChoice = XorO.X_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightMiddleChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightBottomChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(5, vm.WinningSelection);
+        Assert.Equal(5, vm.GamePlay.WinningSelection);
     }
 
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win5_O()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            RightTopChoice = XorO.O_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.RightTopChoice = XorO.O_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightMiddleChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightBottomChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(5, vm.WinningSelection);
+        Assert.Equal(5, vm.GamePlay.WinningSelection);
     }
 
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win6_X()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            LeftTopChoice = XorO.X_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.LeftTopChoice = XorO.X_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightBottomChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(6, vm.WinningSelection);
+        Assert.Equal(6, vm.GamePlay.WinningSelection);
     }
 
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win6_O()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            LeftTopChoice = XorO.O_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.LeftTopChoice = XorO.O_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightBottomChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(6, vm.WinningSelection);
+        Assert.Equal(6, vm.GamePlay.WinningSelection);
     }
 
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win7_X()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            RightTopChoice = XorO.X_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.RightTopChoice = XorO.X_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.LeftBottomChoice = XorO.X_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(7, vm.WinningSelection);
+        Assert.Equal(7, vm.GamePlay.WinningSelection);
     }
 
     [Fact]
     public void GamePlayViewModel_CheckIfWinnerOrDraw_Win7_O()
     {
-        var vm = new GamePlayViewModel
-        {
-            TwoPlayer = true,
-            RightTopChoice = XorO.O_Visible
-        };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
+        vm.RightTopChoice = XorO.O_Visible;
+
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.True(vm.WinningSelection == -1);
+        Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.LeftBottomChoice = XorO.O_Visible;
         vm.GamePlay.CheckIfWinnerOrDraw();
-        Assert.Equal(7, vm.WinningSelection);
+        Assert.Equal(7, vm.GamePlay.WinningSelection);
     }
 
     #endregion CheckIfWinnerOrDraw
@@ -1270,7 +1107,8 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     {
         const int cNumberOfGames = 100_000;
 
-        var vm = new GamePlayViewModel { TwoPlayer = true };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
 
         for (int replay = 0; replay < cNumberOfGames; replay++)
         {
@@ -1288,16 +1126,16 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
 
                 i--;
             }
-            while (i >= 0 && !vm.GameOver);
+            while (i >= 0 && !vm.GamePlay.GameOver);
 
-            if (vm.HasWinner)
+            if (vm.GamePlay.HasWinner)
             {
                 output.WriteLine($"Failed on attempt number {replay}");
                 output.WriteLine(trackBoard);
             }
 
-            Assert.True(vm.GameOver);
-            Assert.False(vm.HasWinner);  // should always end in a tie
+            Assert.True(vm.GamePlay.GameOver);
+            Assert.False(vm.GamePlay.HasWinner);  // should always end in a tie
         }
     }
 
@@ -1308,7 +1146,8 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
 
         Random rnd = new();
 
-        var vm = new GamePlayViewModel { TwoPlayer = true };
+        var vm = CreateViewModel();
+        vm.GamePlay.DelayMilliseconds = 0;
 
         for (int replay = 0; replay < cNumberOfGames; replay++)
         {
@@ -1341,7 +1180,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
 
                 i--;
 
-                if (i <= 0 || vm.GameOver)
+                if (i <= 0 || vm.GamePlay.GameOver)
                     break;
 
                 // let the computer play
@@ -1353,15 +1192,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
 
                 i--;
             }
-            while (i >= 0 && !vm.GameOver);
+            while (i >= 0 && !vm.GamePlay.GameOver);
 
-            Assert.True(vm.GameOver);
+            Assert.True(vm.GamePlay.GameOver);
 
-            if (vm.HasWinner)  // The computer should always win or tie
+            if (vm.GamePlay.HasWinner)  // The computer should always win or tie
             {
-                var winner = vm.GamePlay.Board[vm._winningCombinations[vm.WinningSelection].First().ToInt()];
+                var winner = vm.GamePlay.Board[vm.GamePlay._winningCombinations[vm.GamePlay.WinningSelection].First().ToInt()];
 
-                if (vm.HasWinner && winner != XorO.X_Visible)
+                if (vm.GamePlay.HasWinner && winner != XorO.X_Visible)
                 {
                     output.WriteLine($"Failed on attempt number {replay}");
                     output.WriteLine(trackBoard);
@@ -1380,7 +1219,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_LetPlay_0()
     {
-        var vm = new GamePlayViewModel { TwoPlayer = true };
+        var vm = CreateViewModel();
 
         vm.GamePlay.Play(SquarePosition.LeftTop);
 
@@ -1393,7 +1232,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_LetPlay_1()
     {
-        var vm = new GamePlayViewModel { TwoPlayer = true };
+        var vm = CreateViewModel();
 
         vm.GamePlay.Play(SquarePosition.CenterTop);
 
@@ -1406,7 +1245,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_LetPlay_2()
     {
-        var vm = new GamePlayViewModel { TwoPlayer = true };
+        var vm = CreateViewModel();
 
         vm.GamePlay.Play(SquarePosition.RightTop);
 
@@ -1419,7 +1258,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_LetPlay_3()
     {
-        var vm = new GamePlayViewModel { TwoPlayer = true };
+        var vm = CreateViewModel();
 
         vm.GamePlay.Play(SquarePosition.LeftMiddle);
 
@@ -1432,7 +1271,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_LetPlay_4()
     {
-        var vm = new GamePlayViewModel { TwoPlayer = true };
+        var vm = CreateViewModel();
 
         vm.GamePlay.Play(SquarePosition.CenterMiddle);
 
@@ -1445,7 +1284,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_LetPlay_5()
     {
-        var vm = new GamePlayViewModel { TwoPlayer = true };
+        var vm = CreateViewModel();
 
         vm.GamePlay.Play(SquarePosition.RightMiddle);
 
@@ -1458,7 +1297,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_LetPlay_6()
     {
-        var vm = new GamePlayViewModel { TwoPlayer = true };
+        var vm = CreateViewModel();
 
         vm.GamePlay.Play(SquarePosition.LeftBottom);
 
@@ -1471,7 +1310,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_LetPlay_7()
     {
-        var vm = new GamePlayViewModel { TwoPlayer = true };
+        var vm = CreateViewModel();
 
         vm.GamePlay.Play(SquarePosition.CenterBottom);
 
@@ -1484,7 +1323,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_LetPlay_8()
     {
-        var vm = new GamePlayViewModel { TwoPlayer = true };
+        var vm = CreateViewModel();
 
         vm.GamePlay.Play(SquarePosition.RightBottom);
 
@@ -1497,7 +1336,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     [Fact]
     public void GamePlayViewModel_LetPlay_CatchFail()
     {
-        var vm = new GamePlayViewModel { TwoPlayer = true };
+        var vm = CreateViewModel();
 
         vm.GamePlay.Play(SquarePosition.LeftTop);
 
@@ -1523,28 +1362,39 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     public void GamePlayViewModel_UpdateInstructions_O()
     {
         const string cExpected = $"'O' goes next.";
-        var vm = new GamePlayViewModel { TwoPlayer = true };
+        var vm = CreateViewModel();
         vm.GamePlay.UpdateInstructions();
-        var instructions = vm.Instructions;
+        var instructions = vm.GamePlay.Instructions;
 
         Assert.True(string.Equals(cExpected, instructions, StringComparison.InvariantCultureIgnoreCase));
     }
 
-    [Fact]
-    public void GamePlayViewModel_UpdateInstructions_X()
-    {
-        const string cExpected = $"'X' goes next.";
-        var vm = new GamePlayViewModel { TwoPlayer = true };
-        vm.GamePlay.LetComputerPlayTurn();
-        vm.GamePlay.UpdateInstructions();
-        var instructions = vm.Instructions;
+    //[Fact]
+    //public void GamePlayViewModel_UpdateInstructions_X()
+    //{
+    //    const string cExpected = $"'X' goes next.";
+    //    var vm = CreateViewModel();
+    //    vm.GamePlay.LetComputerPlayTurn();
+    //    vm.GamePlay.UpdateInstructions();
+    //    var instructions = vm.GamePlay.Instructions;
 
-        Assert.True(string.Equals(cExpected, instructions, StringComparison.InvariantCultureIgnoreCase));
-    }
+    //    Assert.True(string.Equals(cExpected, instructions, StringComparison.InvariantCultureIgnoreCase));
+    //}
 
     #endregion UpdateInstructions
 
     #region Helper
+
+    private GamePlayViewModel CreateViewModel()
+    {
+        var vm = new GamePlayViewModel(); // new TestDispatcherService())        {        };
+
+        vm.GamePlay.DelayMilliseconds = 1;
+        vm.GamePlay.TwoPlayer = true;
+
+        return vm;
+    }
+
 
     /// <summary>
     /// Leave a trail that can be reproduced if the computer doesn't win

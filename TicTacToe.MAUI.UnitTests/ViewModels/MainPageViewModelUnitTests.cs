@@ -61,7 +61,7 @@ public class MainPageViewModelUnitTests
 
         //assert
         Assert.NotNull(cmd);
-        Assert.True(cmd.GetType() == typeof(RelayCommand));
+        Assert.True(cmd.GetType() == typeof(AsyncRelayCommand));
     }
 
 }

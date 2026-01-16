@@ -47,8 +47,9 @@
 		<Authors>Charles B. Hayes</Authors>
 		<Product>TicTacToe</Product>
 		<WindowsPackageType>None</WindowsPackageType>
+		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
-
+	
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
 			<_Parameter1>TicTacToe.MAUI.UnitTests</_Parameter1>

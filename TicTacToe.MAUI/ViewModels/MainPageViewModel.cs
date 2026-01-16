@@ -2,65 +2,64 @@
 using CommunityToolkit.Mvvm.Input;
 using TicTacToe.Views;
 
-namespace TicTacToe.ViewModels
+namespace TicTacToe.ViewModels;
+
+/// <summary>
+/// This is the main page or start page
+/// </summary>
+public partial class MainPageViewModel : ViewModelSupport
 {
+
+    #region Auto Properties from Fields
+
     /// <summary>
-    /// This is the main page or start page
+    /// Indicates if the computer starts
     /// </summary>
-    public partial class MainPageViewModel : ViewModelSupport
+    [ObservableProperty]
+    public partial bool TwoPlayer { get; set; }
+
+    /// <summary>
+    /// Indicates if the game has two players; otherwise, one player.
+    /// </summary>
+    [ObservableProperty]
+    public partial bool ComputerStarts { get; set; }
+
+    #endregion Fields
+    
+    #region Auto Relay Commands from Methods
+
+    /// <summary>
+    /// Navigate to the about view
+    /// </summary>
+    [RelayCommand]
+    public async Task AboutClick()
     {
-
-        #region Auto Properties from Fields
-
-        /// <summary>
-        /// Indicates if the computer starts
-        /// </summary>
-        [ObservableProperty]
-        private bool _twoPlayer;
-
-        /// <summary>
-        /// Indicates if the game has two players; otherwise, one player.
-        /// </summary>
-        [ObservableProperty]
-        private bool _computerStarts;
-
-        #endregion Fields
-        
-        #region Auto Relay Commands from Methods
-
-        /// <summary>
-        /// Navigate to the about view
-        /// </summary>
-        [RelayCommand]
-        public async void AboutClick()
+        try
         {
-            try
-            {
-                await Shell.Current.GoToAsync($"{nameof(AboutView)}");
-            }
-            catch
-            {
-                throw new InvalidOperationException($"Unable to resolve type {nameof(AboutView)}");
-            }
+            await Shell.Current.GoToAsync($"{nameof(AboutView)}");
         }
-
-        /// <summary>
-        /// Navigate to the game play view
-        /// </summary>
-        [RelayCommand]
-        public async void StartClick()
+        catch
         {
-            try
-            {
-                await Shell.Current.GoToAsync($"{nameof(GamePlayView)}?TwoPlayer={TwoPlayer}&ComputerStarts={ComputerStarts}");
-            }
-            catch
-            {
-                throw new InvalidOperationException($"Unable to resolve type {nameof(GamePlayView)}");
-            }
+            throw new InvalidOperationException($"Unable to resolve type {nameof(AboutView)}");
         }
-
-        #endregion Relay Commands
-
     }
+
+    /// <summary>
+    /// Navigate to the game play view
+    /// </summary>
+    [RelayCommand]
+    public async Task StartClick()
+    {
+        try
+        {
+            await Shell.Current.GoToAsync($"{nameof(GamePlayView)}?TwoPlayer={TwoPlayer}&ComputerStarts={ComputerStarts}");
+        }
+        catch
+        {
+            throw new InvalidOperationException($"Unable to resolve type {nameof(GamePlayView)}");
+        }
+    }
+
+    #endregion Relay Commands
+
 }

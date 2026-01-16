@@ -6,9 +6,8 @@ public partial class GamePlayView
 {
 	public GamePlayView(GamePlayViewModel viewModel)
 	{
-		BindingContext = viewModel;
 		InitializeComponent();
-		ForceLayout();
+		BindingContext = viewModel;
     }
 
     private void ContentPage_SizeChanged(object sender, EventArgs e)

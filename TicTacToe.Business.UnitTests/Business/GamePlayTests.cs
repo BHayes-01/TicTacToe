@@ -2,6 +2,7 @@
 using Xunit.Abstractions;
 using System.Text;
 using TicTacToe.Business.Business;
+using static System.Console;
 
 namespace TicTacToe.Business.UnitTests.Business;
 
@@ -222,10 +223,10 @@ public class GamePlayTests(ITestOutputHelper output)
     #region CheckIfComputerPlay
 
     [Theory]
-    [InlineData(false, false, false, XorO.None, true)]
+    [InlineData(false, false, false, XorO.None, false)]
     [InlineData(false, false, false, XorO.X_Visible, false)]
     [InlineData(false, false, false, XorO.O_Visible, true)]
-    [InlineData(false, false, true, XorO.None, true)]
+    [InlineData(false, false, true, XorO.None, false)]
     [InlineData(false, false, true, XorO.X_Visible, true)]
     [InlineData(false, false, true, XorO.O_Visible, false)]
     [InlineData(true, false, false, XorO.X_Visible, false)]
@@ -243,8 +244,8 @@ public class GamePlayTests(ITestOutputHelper output)
     public void GamePlay_CheckIfComputerPlay(bool twoPlayer, bool gameOver, bool isX, XorO computerChoice, bool expected)
     {
         var gamePlay = GetGamePlay;
-        gamePlay.ViewModel.TwoPlayer = twoPlayer;
-        gamePlay.ViewModel.GameOver = gameOver;
+        gamePlay.TwoPlayer = twoPlayer;
+        gamePlay.GameOver = gameOver;
         gamePlay.IsX = isX;
         gamePlay.ComputerChoice = computerChoice;
 
@@ -255,6 +256,31 @@ public class GamePlayTests(ITestOutputHelper output)
 
 
     #endregion CheckIfComputerPlay
+
+    #region CheckIfWinnerOrDraw
+
+    [Fact]
+    public void GamePlay_CheckIfWinnerOrDraw()
+    {
+        var gamePlay = GetGamePlay;
+        gamePlay.DelayMilliseconds = 0;
+        gamePlay.TwoPlayer = true;
+        gamePlay.LeftTopChoice = XorO.O_Visible;
+
+        gamePlay.CheckIfWinnerOrDraw();
+        Assert.True(gamePlay.WinningSelection == -1);
+
+        gamePlay.CenterTopChoice = XorO.O_Visible;
+        gamePlay.CheckIfWinnerOrDraw();
+        Assert.True(gamePlay.WinningSelection == -1);
+
+        gamePlay.RightTopChoice = XorO.O_Visible;
+        gamePlay.CheckIfWinnerOrDraw();
+        Assert.Equal(0, gamePlay.WinningSelection);
+    }
+
+    #endregion CheckIfWinnerOrDraw
+
 
     #region IsComputersTurn
 
@@ -336,7 +362,8 @@ public class GamePlayTests(ITestOutputHelper output)
         const int cNumberOfGames = 100_000;
 
         var gamePlay = GetGamePlay;
-        gamePlay.ViewModel.TwoPlayer = true;
+        gamePlay.DelayMilliseconds = 0;
+        gamePlay.TwoPlayer = true;
 
         for (int replay = 0; replay < cNumberOfGames; replay++)
         {
@@ -346,6 +373,7 @@ public class GamePlayTests(ITestOutputHelper output)
             int i = 8;
             do
             {
+                gamePlay.IsX = !gamePlay.IsX;
                 gamePlay.LetComputerPlayTurn();
                 trackBoard += StoreBoard(gamePlay, i);
 
@@ -356,16 +384,16 @@ public class GamePlayTests(ITestOutputHelper output)
 
                 i--;
             }
-            while (i >= 0 && !gamePlay.ViewModel.GameOver);
+            while (i >= 0 && !gamePlay.GameOver);
 
-            if (gamePlay.ViewModel.HasWinner)
+            if (gamePlay.HasWinner)
             {
                 output.WriteLine($"Failed on attempt number {replay}");
                 output.WriteLine(trackBoard);
             }
 
-            Assert.True(gamePlay.ViewModel.GameOver);
-            Assert.False(gamePlay.ViewModel.HasWinner);  // should always end in a tie
+            Assert.True(gamePlay.GameOver);
+            Assert.False(gamePlay.HasWinner);  // should always end in a tie
         }
     }
 
@@ -377,7 +405,8 @@ public class GamePlayTests(ITestOutputHelper output)
         Random rnd = new();
 
         var gamePlay = GetGamePlay;
-        gamePlay.ViewModel.TwoPlayer = true;
+        gamePlay.DelayMilliseconds = 0;
+        gamePlay.TwoPlayer = true;
 
         for (int replay = 0; replay < cNumberOfGames; replay++)
         {
@@ -410,9 +439,10 @@ public class GamePlayTests(ITestOutputHelper output)
 
                 i--;
 
+                gamePlay.IsX = !gamePlay.IsX;
                 gamePlay.CheckIfWinnerOrDraw();
 
-                if (i <= 0 || gamePlay.ViewModel.GameOver)
+                if (i <= 0 || gamePlay.GameOver)
                     break;
 
                 // let the computer play
@@ -422,19 +452,20 @@ public class GamePlayTests(ITestOutputHelper output)
                 var count = gamePlay.Board.Count(o => o.Equals(XorO.None));
                 Assert.True(count == i);
 
+                gamePlay.IsX = !gamePlay.IsX;
                 gamePlay.CheckIfWinnerOrDraw();
 
                 i--;
             }
-            while (i >= 0 && !gamePlay.ViewModel.GameOver);
+            while (i >= 0 && !gamePlay.GameOver);
 
-            Assert.True(gamePlay.ViewModel.GameOver);
+            Assert.True(gamePlay.GameOver);
 
-            if (gamePlay.ViewModel.HasWinner)  // The computer should always win or tie
+            if (gamePlay.HasWinner)  // The computer should always win or tie
             {
                 var winner = gamePlay.Board[gamePlay._winningCombinations[gamePlay.WinningSelection].First().ToInt()];
 
-                if (gamePlay.ViewModel.HasWinner && winner != XorO.X_Visible)
+                if (gamePlay.HasWinner && winner != XorO.X_Visible)
                 {
                     output.WriteLine($"Failed on attempt number {replay}");
                     output.WriteLine(trackBoard);
@@ -451,11 +482,11 @@ public class GamePlayTests(ITestOutputHelper output)
     #region Play
 
     [Fact]
-    public void GamePlay_LetPlay_0()
+    public void GamePlay_Play_0()
     {
         var gamePlay = GetGamePlay;
-        gamePlay.ViewModel.TwoPlayer = true;
-
+        gamePlay.TwoPlayer = true;
+        
         gamePlay.Play(SquarePosition.LeftTop);
 
         var count = gamePlay.Board.Count(o => o.Equals(XorO.None));
@@ -465,10 +496,10 @@ public class GamePlayTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void GamePlay_LetPlay_1()
+    public void GamePlay_Play_1()
     {
         var gamePlay = GetGamePlay;
-        gamePlay.ViewModel.TwoPlayer = true;
+        gamePlay.TwoPlayer = true;
 
         gamePlay.Play(SquarePosition.CenterTop);
 
@@ -479,10 +510,10 @@ public class GamePlayTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void GamePlay_LetPlay_2()
+    public void GamePlay_Play_2()
     {
         var gamePlay = GetGamePlay;
-        gamePlay.ViewModel.TwoPlayer = true;
+        gamePlay.TwoPlayer = true;
 
         gamePlay.Play(SquarePosition.RightTop);
 
@@ -493,10 +524,10 @@ public class GamePlayTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void GamePlay_LetPlay_3()
+    public void GamePlay_Play_3()
     {
         var gamePlay = GetGamePlay;
-        gamePlay.ViewModel.TwoPlayer = true;
+        gamePlay.TwoPlayer = true;
 
         gamePlay.Play(SquarePosition.LeftMiddle);
 
@@ -507,10 +538,10 @@ public class GamePlayTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void GamePlay_LetPlay_4()
+    public void GamePlay_Play_4()
     {
         var gamePlay = GetGamePlay;
-        gamePlay.ViewModel.TwoPlayer = true;
+        gamePlay.TwoPlayer = true;
 
         gamePlay.Play(SquarePosition.CenterMiddle);
 
@@ -521,10 +552,10 @@ public class GamePlayTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void GamePlay_LetPlay_5()
+    public void GamePlay_Play_5()
     {
         var gamePlay = GetGamePlay;
-        gamePlay.ViewModel.TwoPlayer = true;
+        gamePlay.TwoPlayer = true;
 
         gamePlay.Play(SquarePosition.RightMiddle);
 
@@ -535,10 +566,10 @@ public class GamePlayTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void GamePlay_LetPlay_6()
+    public void GamePlay_Play_6()
     {
         var gamePlay = GetGamePlay;
-        gamePlay.ViewModel.TwoPlayer = true;
+        gamePlay.TwoPlayer = true;
 
         gamePlay.Play(SquarePosition.LeftBottom);
 
@@ -549,10 +580,10 @@ public class GamePlayTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void GamePlay_LetPlay_7()
+    public void GamePlay_Play_7()
     {
         var gamePlay = GetGamePlay;
-        gamePlay.ViewModel.TwoPlayer = true;
+        gamePlay.TwoPlayer = true;
 
         gamePlay.Play(SquarePosition.CenterBottom);
 
@@ -563,10 +594,10 @@ public class GamePlayTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void GamePlay_LetPlay_8()
+    public void GamePlay_Play_8()
     {
         var gamePlay = GetGamePlay;
-        gamePlay.ViewModel.TwoPlayer = true;
+        gamePlay.TwoPlayer = true;
 
         gamePlay.Play(SquarePosition.RightBottom);
 
@@ -625,10 +656,10 @@ public class GamePlayTests(ITestOutputHelper output)
     {
         get
         {
-
             var gamePlayViewModel = new GamePlayViewModelTest();
             var gamePlay = new GamePlay(gamePlayViewModel);
             gamePlayViewModel.GamePlay = gamePlay;
+            gamePlay.IsThinking = false;
 
             return gamePlay;
         }
@@ -638,8 +669,8 @@ public class GamePlayTests(ITestOutputHelper output)
     {
         gamePlay.IsX = false;
         gamePlay.ComputerChoice = XorO.O_Visible;
-        gamePlay.ViewModel.HasWinner = false;
-        gamePlay.ViewModel.GameOver = false;
+        gamePlay.HasWinner = false;
+        gamePlay.GameOver = false;
 
         for (int i = 0; i < gamePlay.Board.Count(); i++)
         {
@@ -662,61 +693,3 @@ public class GamePlayTests(ITestOutputHelper output)
 
     #endregion Methods
 }
-
-class A
-{
-    public virtual string GetValue() => "A";
-
-    //private abstract void MyMethod() { }
-
-}
-
-sealed class B : A
-{
-    public override string GetValue() => "B";
-
-}
-
-public class TestClass
-{
-    [Fact]
-    public void TestMethod()
-    {
-        A a = new B();
-        Console.WriteLine(a.GetValue());
-    }
-}
-
-public abstract class BaseClass
-{
-    public BaseClass(string test)
-    {
-        Print();
-    }
-
-    public string MyString => "test";
-
-    public virtual void Print()
-    {
-        Console.WriteLine("Base");
-    }
-
-    public async Task<int> GetValueAsync()
-    {
-        return await Task.FromResult(5);
-    }
-}
-
-public interface IMyInterface
-{
-    int Value { get; }
-
-    void Write() => Console.WriteLine("Log");
-}
-
-public class MyClass : IMyInterface
-{
-    public int Value => 3;
-
-}
-

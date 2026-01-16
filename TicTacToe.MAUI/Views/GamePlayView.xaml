@@ -8,10 +8,10 @@
     xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewModels="clr-namespace:TicTacToe.ViewModels"
     x:DataType="viewModels:GamePlayViewModel"
-    SizeChanged="ContentPage_SizeChanged"
-    Appearing="ContentPage_Appearing" >
+    Appearing="ContentPage_Appearing"
+    SizeChanged="ContentPage_SizeChanged">
 
-    <Grid>
+    <Grid x:Name="gridPlayView">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="{Binding TopRowHeight}" />
@@ -33,7 +33,7 @@
             Grid.Row="1"
             FontSize="24"
             HorizontalOptions="Center"
-            Text="{Binding Instructions}" />
+            Text="{Binding GamePlay.Instructions}" />
 
         <VerticalStackLayout
             x:Name="stkGameBoard"
@@ -174,7 +174,7 @@
                     Grid.Column="0"
                     Grid.ColumnSpan="7"
                     HorizontalOptions="Fill"
-                    IsVisible="{Binding HasWinner}"
+                    IsVisible="{Binding GamePlay.HasWinner}"
                     Style="{StaticResource ThickLine}"
                     VerticalOptions="Fill"
                     X1="{Binding WinningX1}"
@@ -190,7 +190,7 @@
             Grid.Row="0"
             Grid.RowSpan="5"
             HorizontalOptions="Center"
-            IsVisible="{Binding GameOver}"
+            IsVisible="{Binding GamePlay.GameOver}"
             VerticalOptions="Center">
 
             <Grid.RowDefinitions>

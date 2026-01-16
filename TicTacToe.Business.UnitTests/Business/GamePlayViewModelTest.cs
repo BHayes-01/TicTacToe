@@ -180,6 +180,11 @@ public class GamePlayViewModelTest : IGamePlayViewModel
         GamePlay.Board[SquarePosition.RightTop.ToInt()] = RightTopChoice;
     }
 
+    public void RunOnMainThread(Action action)
+    {
+        action();
+    }
+
     public void UpdateWinningLine()
     {
         // do nothing
