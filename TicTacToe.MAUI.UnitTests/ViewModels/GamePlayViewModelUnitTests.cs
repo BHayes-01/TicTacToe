@@ -608,7 +608,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     {
         var vm = CreateViewModel(); // prevent the computer from playing 
         vm.PlayAgainClick();
-        Assert.False(vm.GamePlay.IsComputersTurn);
+        Assert.False(InternalGamePlay(vm.GamePlay).IsComputersTurn());
     }
 
     [Fact]
@@ -620,7 +620,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.PlayAgainClick();
         vm.LeftTopClickCommand.Execute(XorO.None);
         vm.GamePlay.TwoPlayer = false;
-        Assert.True(vm.GamePlay.IsComputersTurn);
+        Assert.True(InternalGamePlay(vm.GamePlay).IsComputersTurn());
     }
 
     [Fact]
@@ -738,7 +738,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.CenterTopChoice = XorO.X_Visible;
         var threeChoices = new SquarePosition[] { SquarePosition.LeftTop, SquarePosition.CenterTop, SquarePosition.RightTop };
 
-        var result = vm.GamePlay.CheckShouldPlay(threeChoices, XorO.X_Visible);
+        var result = InternalGamePlay(vm.GamePlay).CheckShouldPlay(threeChoices, XorO.X_Visible);
 
         Assert.Equal(SquarePosition.RightTop, result);
     }
@@ -754,7 +754,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.RightTopChoice = XorO.X_Visible;
         var threeChoices = new SquarePosition[] { SquarePosition.LeftTop, SquarePosition.CenterTop, SquarePosition.RightTop };
 
-        var result = vm.GamePlay.CheckShouldPlay(threeChoices, XorO.X_Visible);
+        var result = InternalGamePlay(vm.GamePlay).CheckShouldPlay(threeChoices, XorO.X_Visible);
 
         Assert.Equal(SquarePosition.CenterTop, result);
     }
@@ -770,7 +770,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.RightTopChoice = XorO.X_Visible;
         var threeChoices = new SquarePosition[] { SquarePosition.LeftTop, SquarePosition.CenterTop, SquarePosition.RightTop };
 
-        var result = vm.GamePlay.CheckShouldPlay(threeChoices, XorO.X_Visible);
+        var result = InternalGamePlay(vm.GamePlay).CheckShouldPlay(threeChoices, XorO.X_Visible);
 
         Assert.Equal(SquarePosition.LeftTop, result);
     }
@@ -785,7 +785,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.RightTopChoice = XorO.X_Visible;
         var threeChoices = new SquarePosition[] { SquarePosition.LeftTop, SquarePosition.CenterTop, SquarePosition.RightTop };
 
-        var result = vm.GamePlay.CheckShouldPlay(threeChoices, XorO.X_Visible);
+        var result = InternalGamePlay(vm.GamePlay).CheckShouldPlay(threeChoices, XorO.X_Visible);
 
         Assert.True(result == SquarePosition.Invalid);
     }
@@ -801,15 +801,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.LeftTopChoice = XorO.X_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterTopChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightTopChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(0, vm.GamePlay.WinningSelection);
     }
 
@@ -820,15 +820,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.LeftTopChoice = XorO.O_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterTopChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightTopChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(0, vm.GamePlay.WinningSelection);
     }
 
@@ -839,15 +839,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.LeftMiddleChoice = XorO.X_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightMiddleChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(1, vm.GamePlay.WinningSelection);
     }
 
@@ -858,15 +858,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.LeftMiddleChoice = XorO.O_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightMiddleChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(1, vm.GamePlay.WinningSelection);
     }
 
@@ -877,15 +877,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.LeftBottomChoice = XorO.X_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterBottomChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightBottomChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(2, vm.GamePlay.WinningSelection);
     }
 
@@ -896,15 +896,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.LeftBottomChoice = XorO.O_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterBottomChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightBottomChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(2, vm.GamePlay.WinningSelection);
     }
 
@@ -915,15 +915,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.LeftTopChoice = XorO.X_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.LeftMiddleChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.LeftBottomChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(3, vm.GamePlay.WinningSelection);
     }
 
@@ -934,15 +934,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.LeftTopChoice = XorO.O_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.LeftMiddleChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.LeftBottomChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(3, vm.GamePlay.WinningSelection);
     }
 
@@ -953,15 +953,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.CenterTopChoice = XorO.X_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterBottomChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(4, vm.GamePlay.WinningSelection);
     }
 
@@ -972,15 +972,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.CenterTopChoice = XorO.O_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterBottomChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(4, vm.GamePlay.WinningSelection);
     }
 
@@ -991,15 +991,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.RightTopChoice = XorO.X_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightMiddleChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightBottomChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(5, vm.GamePlay.WinningSelection);
     }
 
@@ -1010,15 +1010,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.RightTopChoice = XorO.O_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightMiddleChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightBottomChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(5, vm.GamePlay.WinningSelection);
     }
 
@@ -1029,15 +1029,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.LeftTopChoice = XorO.X_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightBottomChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(6, vm.GamePlay.WinningSelection);
     }
 
@@ -1048,15 +1048,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.LeftTopChoice = XorO.O_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.RightBottomChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(6, vm.GamePlay.WinningSelection);
     }
 
@@ -1067,15 +1067,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.RightTopChoice = XorO.X_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.LeftBottomChoice = XorO.X_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(7, vm.GamePlay.WinningSelection);
     }
 
@@ -1086,15 +1086,15 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         vm.GamePlay.DelayMilliseconds = 0;
         vm.RightTopChoice = XorO.O_Visible;
 
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.CenterMiddleChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.True(vm.GamePlay.WinningSelection == -1);
 
         vm.LeftBottomChoice = XorO.O_Visible;
-        vm.GamePlay.CheckIfWinnerOrDraw();
+        InternalGamePlay(vm.GamePlay).CheckIfWinnerOrDraw();
         Assert.Equal(7, vm.GamePlay.WinningSelection);
     }
 
@@ -1118,7 +1118,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
             int i = 8;
             do
             {
-                vm.GamePlay.LetComputerPlayTurn();
+                InternalGamePlay(vm.GamePlay).LetComputerPlayTurn();
                 trackBoard += StoreBoard(vm, i);
 
                 var count = vm.GamePlay.Board.Count(o => o.Equals(XorO.None));
@@ -1169,7 +1169,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
                     {
                         if (index == choice)
                         {
-                            vm.GamePlay.Play(position);
+                            InternalGamePlay(vm.GamePlay).Play(position);
                             trackBoard += StoreBoard(vm, i);
                             break;
                         }
@@ -1184,7 +1184,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
                     break;
 
                 // let the computer play
-                vm.GamePlay.LetComputerPlayTurn();
+                InternalGamePlay(vm.GamePlay).LetComputerPlayTurn();
                 trackBoard += StoreBoard(vm, i);
 
                 var count = vm.GamePlay.Board.Count(o => o.Equals(XorO.None));
@@ -1198,7 +1198,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
 
             if (vm.GamePlay.HasWinner)  // The computer should always win or tie
             {
-                var winner = vm.GamePlay.Board[vm.GamePlay._winningCombinations[vm.GamePlay.WinningSelection].First().ToInt()];
+                var winner = vm.GamePlay.Board[InternalGamePlay(vm.GamePlay)._winningCombinations[vm.GamePlay.WinningSelection].First().ToInt()];
 
                 if (vm.GamePlay.HasWinner && winner != XorO.X_Visible)
                 {
@@ -1221,7 +1221,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     {
         var vm = CreateViewModel();
 
-        vm.GamePlay.Play(SquarePosition.LeftTop);
+        InternalGamePlay(vm.GamePlay).Play(SquarePosition.LeftTop);
 
         var count = vm.GamePlay.Board.Count(o => o.Equals(XorO.None));
         Assert.Equal(8, count);
@@ -1234,7 +1234,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     {
         var vm = CreateViewModel();
 
-        vm.GamePlay.Play(SquarePosition.CenterTop);
+        InternalGamePlay(vm.GamePlay).Play(SquarePosition.CenterTop);
 
         var count = vm.GamePlay.Board.Count(o => o.Equals(XorO.None));
         Assert.Equal(8, count);
@@ -1247,7 +1247,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     {
         var vm = CreateViewModel();
 
-        vm.GamePlay.Play(SquarePosition.RightTop);
+        InternalGamePlay(vm.GamePlay).Play(SquarePosition.RightTop);
 
         var count = vm.GamePlay.Board.Count(o => o.Equals(XorO.None));
         Assert.Equal(8, count);
@@ -1260,7 +1260,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     {
         var vm = CreateViewModel();
 
-        vm.GamePlay.Play(SquarePosition.LeftMiddle);
+        InternalGamePlay(vm.GamePlay).Play(SquarePosition.LeftMiddle);
 
         var count = vm.GamePlay.Board.Count(o => o.Equals(XorO.None));
         Assert.Equal(8, count);
@@ -1273,7 +1273,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     {
         var vm = CreateViewModel();
 
-        vm.GamePlay.Play(SquarePosition.CenterMiddle);
+        InternalGamePlay(vm.GamePlay).Play(SquarePosition.CenterMiddle);
 
         var count = vm.GamePlay.Board.Count(o => o.Equals(XorO.None));
         Assert.Equal(8, count);
@@ -1286,7 +1286,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     {
         var vm = CreateViewModel();
 
-        vm.GamePlay.Play(SquarePosition.RightMiddle);
+        InternalGamePlay(vm.GamePlay).Play(SquarePosition.RightMiddle);
 
         var count = vm.GamePlay.Board.Count(o => o.Equals(XorO.None));
         Assert.Equal(8, count);
@@ -1299,7 +1299,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     {
         var vm = CreateViewModel();
 
-        vm.GamePlay.Play(SquarePosition.LeftBottom);
+        InternalGamePlay(vm.GamePlay).Play(SquarePosition.LeftBottom);
 
         var count = vm.GamePlay.Board.Count(o => o.Equals(XorO.None));
         Assert.Equal(8, count);
@@ -1312,7 +1312,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     {
         var vm = CreateViewModel();
 
-        vm.GamePlay.Play(SquarePosition.CenterBottom);
+        InternalGamePlay(vm.GamePlay).Play(SquarePosition.CenterBottom);
 
         var count = vm.GamePlay.Board.Count(o => o.Equals(XorO.None));
         Assert.Equal(8, count);
@@ -1325,7 +1325,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     {
         var vm = CreateViewModel();
 
-        vm.GamePlay.Play(SquarePosition.RightBottom);
+        InternalGamePlay(vm.GamePlay).Play(SquarePosition.RightBottom);
 
         var count = vm.GamePlay.Board.Count(o => o.Equals(XorO.None));
         Assert.Equal(8, count);
@@ -1338,7 +1338,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
     {
         var vm = CreateViewModel();
 
-        vm.GamePlay.Play(SquarePosition.LeftTop);
+        InternalGamePlay(vm.GamePlay).Play(SquarePosition.LeftTop);
 
         var count = vm.GamePlay.Board.Count(o => o.Equals(XorO.None));
         Assert.Equal(8, count);
@@ -1346,7 +1346,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         Assert.NotEqual(XorO.None, vm.LeftTopChoice);
         var value = vm.LeftTopChoice;
 
-        vm.GamePlay.Play(SquarePosition.LeftTop);
+        InternalGamePlay(vm.GamePlay).Play(SquarePosition.LeftTop);
 
         count = vm.GamePlay.Board.Count(o => o.Equals(XorO.None));
         Assert.Equal(8, count);
@@ -1387,7 +1387,7 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
 
     private GamePlayViewModel CreateViewModel()
     {
-        var vm = new GamePlayViewModel(); // new TestDispatcherService())        {        };
+        var vm = new GamePlayViewModel();
 
         vm.GamePlay.DelayMilliseconds = 1;
         vm.GamePlay.TwoPlayer = true;
@@ -1395,6 +1395,10 @@ public class GamePlayViewModelUnitTests(ITestOutputHelper output)
         return vm;
     }
 
+    private GamePlay InternalGamePlay(IGamePlay gamePlay)
+    {
+        return (GamePlay)gamePlay;
+    }
 
     /// <summary>
     /// Leave a trail that can be reproduced if the computer doesn't win

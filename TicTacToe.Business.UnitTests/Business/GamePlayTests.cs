@@ -20,20 +20,6 @@ public class GamePlayTests(ITestOutputHelper output)
         Assert.NotNull(gamePLay);
     }
 
-    [Fact]
-    public void GamePlay_Constructor_Fail()
-    {
-        try
-        {
-            var gamePlay = new GamePlay(null);
-            Assert.Fail();
-        }
-        catch
-        {
-            // should fail
-        }
-    }
-
     #endregion Constructor
 
     #region Methods
@@ -290,7 +276,7 @@ public class GamePlayTests(ITestOutputHelper output)
         var gamePlay = GetGamePlay;
         gamePlay.IsX = true;
         gamePlay.ComputerChoice = XorO.O_Visible;
-        Assert.False(gamePlay.IsComputersTurn);
+        Assert.False(gamePlay.IsComputersTurn());
     }
 
     [Fact]
@@ -299,7 +285,7 @@ public class GamePlayTests(ITestOutputHelper output)
         var gamePlay = GetGamePlay;
         gamePlay.IsX = false;
         gamePlay.ComputerChoice = XorO.X_Visible;
-        Assert.False(gamePlay.IsComputersTurn);
+        Assert.False(gamePlay.IsComputersTurn());
     }
 
     [Fact]
@@ -308,7 +294,7 @@ public class GamePlayTests(ITestOutputHelper output)
         var gamePlay = GetGamePlay;
         gamePlay.IsX = true;
         gamePlay.ComputerChoice = XorO.O_Visible;
-        Assert.False(gamePlay.IsComputersTurn);
+        Assert.False(gamePlay.IsComputersTurn());
     }
 
     [Fact]
@@ -317,7 +303,7 @@ public class GamePlayTests(ITestOutputHelper output)
         var gamePlay = GetGamePlay;
         gamePlay.IsX = false;
         gamePlay.ComputerChoice = XorO.X_Visible;
-        Assert.False(gamePlay.IsComputersTurn);
+        Assert.False(gamePlay.IsComputersTurn());
     }
 
     #endregion IsComputersTurn
@@ -657,8 +643,7 @@ public class GamePlayTests(ITestOutputHelper output)
         get
         {
             var gamePlayViewModel = new GamePlayViewModelTest();
-            var gamePlay = new GamePlay(gamePlayViewModel);
-            gamePlayViewModel.GamePlay = gamePlay;
+            var gamePlay = (GamePlay)gamePlayViewModel.GamePlay;
             gamePlay.IsThinking = false;
 
             return gamePlay;

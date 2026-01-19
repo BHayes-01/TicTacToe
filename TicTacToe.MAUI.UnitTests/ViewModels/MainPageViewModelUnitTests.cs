@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using TicTacToe.Business.Business;
 using TicTacToe.ViewModels;
 
 namespace TicTacToe.MAUI.UnitTests.ViewModels;
@@ -9,7 +10,7 @@ public class MainPageViewModelUnitTests
     [Fact]
     public void MainPageViewModel_Constructor()
     {
-        var vm = new MainPageViewModel();
+        var vm = GetViewModel();
 
         Assert.NotNull(vm);
     }
@@ -18,7 +19,7 @@ public class MainPageViewModelUnitTests
     public void MainPageViewModel_ComputerStarts()
     {
         int propertyChangedCount = 0;
-        var vm = new MainPageViewModel();
+        MainPageViewModel vm = GetViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
         var origValue = vm.ComputerStarts;
@@ -36,7 +37,7 @@ public class MainPageViewModelUnitTests
     public void MainPageViewModel_TwoPlayer()
     {
         int propertyChangedCount = 0;
-        var vm = new MainPageViewModel();
+        MainPageViewModel vm = GetViewModel();
         vm.PropertyChanged += (obj, PropertyChangedEventArgs) => propertyChangedCount++;
 
         var origValue = vm.TwoPlayer;
@@ -54,7 +55,7 @@ public class MainPageViewModelUnitTests
     public void MainPageViewModel_StartClick()
     {
         // arrange
-        var vm = new MainPageViewModel();
+        var vm = GetViewModel();
 
         // act
         var cmd = vm.StartClickCommand;   // test relay command
@@ -62,6 +63,11 @@ public class MainPageViewModelUnitTests
         //assert
         Assert.NotNull(cmd);
         Assert.True(cmd.GetType() == typeof(AsyncRelayCommand));
+    }
+
+    private MainPageViewModel GetViewModel()
+    {
+        return new MainPageViewModel(new GamePlay());
     }
 
 }

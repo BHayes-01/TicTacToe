@@ -1,5 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
+using TicTacToe.Business.Business;
 using TicTacToe.Views;
 
 namespace TicTacToe.ViewModels;
@@ -7,22 +7,47 @@ namespace TicTacToe.ViewModels;
 /// <summary>
 /// This is the main page or start page
 /// </summary>
-public partial class MainPageViewModel : ViewModelSupport
+public partial class MainPageViewModel(IGamePlay gamePlay) : ViewModelSupport
 {
-
+    
     #region Auto Properties from Fields
 
     /// <summary>
     /// Indicates if the computer starts
     /// </summary>
-    [ObservableProperty]
-    public partial bool TwoPlayer { get; set; }
+    public bool TwoPlayer 
+    { 
+        get => gamePlay.TwoPlayer;
+        set
+        {
+            if (gamePlay.TwoPlayer != value)
+            {
+                gamePlay.TwoPlayer = value;
+                OnPropertyChanged(nameof(TwoPlayer));
+            }
+        }
+    }
 
     /// <summary>
     /// Indicates if the game has two players; otherwise, one player.
     /// </summary>
-    [ObservableProperty]
-    public partial bool ComputerStarts { get; set; }
+    public bool ComputerStarts 
+    {
+        get => gamePlay.ComputerStarts;
+        set
+        {
+            if (gamePlay.ComputerStarts != value)
+            {
+                gamePlay.ComputerStarts = value;
+                OnPropertyChanged(nameof(ComputerStarts));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Make the game play object available internally for unit testing
+    /// </summary>
+    public IGamePlay GamePlay => gamePlay;
 
     #endregion Fields
     
@@ -52,7 +77,7 @@ public partial class MainPageViewModel : ViewModelSupport
     {
         try
         {
-            await Shell.Current.GoToAsync($"{nameof(GamePlayView)}?TwoPlayer={TwoPlayer}&ComputerStarts={ComputerStarts}");
+            await Shell.Current.GoToAsync($"{nameof(GamePlayView)}");
         }
         catch
         {

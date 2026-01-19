@@ -33,7 +33,7 @@ namespace TicTacToe.ViewModels
         /// <summary>
         /// Publish date of the application
         /// </summary>
-        public DateTime PublishDateTime => new DateTime(2026, 8, 1);
+        public DateTime PublishDateTime => new(2026, 1, 16);
 
         /// <summary>
         /// Return the current version number

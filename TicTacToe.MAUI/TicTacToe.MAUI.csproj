@@ -17,7 +17,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>
 		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
-		
+		  
 		<!-- Display name -->
 		<ApplicationTitle>TicTacToe</ApplicationTitle>
 
@@ -41,8 +41,8 @@
 		<PackageIcon>TicTacTow.png</PackageIcon>
 		<RepositoryUrl>https://github.com/BHayes-01/TicTacToe</RepositoryUrl>
 		<PackageTags>.NET CORE;MAUI</PackageTags>
-		<AssemblyVersion>1.1.0</AssemblyVersion>
-		<FileVersion>1.1.0</FileVersion>
+		<AssemblyVersion>1.2.0</AssemblyVersion>
+		<FileVersion>1.2.0</FileVersion>
 		<NeutralLanguage>en</NeutralLanguage>
 		<Authors>Charles B. Hayes</Authors>
 		<Product>TicTacToe</Product>

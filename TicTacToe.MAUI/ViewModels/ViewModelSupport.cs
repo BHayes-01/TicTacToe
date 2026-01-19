@@ -12,6 +12,14 @@ public partial class ViewModelSupport : ObservableObject
     public void QuitClick()
     {
         Console.WriteLine("Existing the program...");
+        try
+        {
+            Application.Current?.CloseWindow(Application.Current.MainPage.Window);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception during CloseWindow: {ex.Message}");
+        }
 
 #if ANDROID
         var activity = Platform.CurrentActivity; // in MAUI, you can get current Android activity this way

@@ -3,9 +3,23 @@ using TicTacToe.Enums;
 
 namespace TicTacToe.Business.UnitTests.Business;
 
-public class GamePlayViewModelTest : IGamePlayViewModel
+public class GamePlayViewModelTest : IGamePlayViewModel, IDisposable
 {
-    public GamePlay GamePlay { get; set; }
+    public GamePlayViewModelTest()
+    {
+        GamePlay = new GamePlay();
+        GamePlay.ComputerPlayed += GamePlay_ComputerPlayed;
+    }
+
+    
+    public void Dispose()
+    {
+        // Unregister to prevent memory leaks
+        GamePlay.ComputerPlayed -= GamePlay_ComputerPlayed;
+    }
+
+
+    public IGamePlay GamePlay { get; set; }
 
     public bool ComputerStarts { get; set; }
 
@@ -188,6 +202,62 @@ public class GamePlayViewModelTest : IGamePlayViewModel
     public void UpdateWinningLine()
     {
         // do nothing
+    }
+
+    private void GamePlay_ComputerPlayed(object sender, ComputerChoiceEventArgs e)
+    {
+        switch (e.Square)
+        {
+            case SquarePosition.LeftTop:
+                {
+                    LeftTopChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.CenterTop:
+                {
+                    CenterTopChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.RightTop:
+                {
+                    RightTopChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.LeftMiddle:
+                {
+                    LeftMiddleChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.CenterMiddle:
+                {
+                    CenterMiddleChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.RightMiddle:
+                {
+                    RightMiddleChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.LeftBottom:
+                {
+                    LeftBottomChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.CenterBottom:
+                {
+                    CenterBottomChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.RightBottom:
+                {
+                    RightBottomChoice = e.Choice;
+                    break;
+                }
+
+            case SquarePosition.Invalid:
+                Console.WriteLine("Invalid Choice");
+                break;
+        }
     }
 
 }

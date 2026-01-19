@@ -7,7 +7,7 @@ public interface IGamePlayViewModel
 
     #region Auto Properties From Fields
 
-    GamePlay GamePlay { get; set; }
+    IGamePlay GamePlay { get; }
 
     #endregion Auto Properties From Fields
 

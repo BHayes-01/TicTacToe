@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using TicTacToe.Views;
 using TicTacToe.ViewModels;
+using TicTacToe.Business.Business;
 
 namespace TicTacToe;
 
@@ -29,6 +30,9 @@ public static class MauiProgram
 
 	public static MauiAppBuilder RegisterViewModels(this MauiAppBuilder builder)
 	{
+		// Use Singleton for services that share this (one instance shared by all pages)
+        builder.Services.AddSingleton<IGamePlay, GamePlay>();
+
         builder.Services.AddSingleton<GamePlayView>();
         builder.Services.AddSingleton<GamePlayViewModel>();
 

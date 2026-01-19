@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.ComponentModel;
 using System.Web;
 using TicTacToe.Business.Business;
 using TicTacToe.Enums;
@@ -10,14 +11,54 @@ namespace TicTacToe.ViewModels;
 /// This view model is used to handle game play.
 /// This includes the decision made by the computer.
 /// </summary>
-public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, IGamePlayViewModel
+public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, IGamePlayViewModel, IDisposable
 {
 
     #region Fields
 
-    private GamePlay _gamePlay;
+    private IGamePlay _gamePlay;
 
     #endregion Fields
+
+    #region Constructor
+
+    public GamePlayViewModel(IGamePlay gamePlay)
+    {
+        _gamePlay = gamePlay;
+        OnPropertyChanged(nameof(GamePlay));
+        GamePlay.PropertyChanged += GamePlay_PropertyChanged;
+        GamePlay.ComputerPlayed += GamePlay_ComputerPlayed;
+    }
+
+    ~GamePlayViewModel()
+    {
+        DisposeEvents();
+    }
+
+    internal GamePlayViewModel()
+    {
+        _gamePlay = new GamePlay();
+        OnPropertyChanged(nameof(GamePlay));
+        GamePlay.PropertyChanged += GamePlay_PropertyChanged;
+        GamePlay.ComputerPlayed += GamePlay_ComputerPlayed;
+    }
+
+    public void Dispose()
+    {
+        DisposeEvents();
+    }
+
+    private void DisposeEvents()
+    {
+        // Unregister to prevent memory leaks
+        if (GamePlay is null) return;
+
+        GamePlay.PropertyChanged -= GamePlay_PropertyChanged;
+        GamePlay.ComputerPlayed -= GamePlay_ComputerPlayed;
+        _gamePlay = null;
+    }
+
+    #endregion Constructor
 
     #region IQueryAttributable
 
@@ -27,14 +68,6 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
     /// <param name="query"></param>
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        // get the value of Two Player here.  
-        if (TryGetBool(query, nameof(GamePlay.TwoPlayer), out var twoPlayer))
-            GamePlay.TwoPlayer = twoPlayer;
-
-        // get the value of Computer Starts here.
-        if (TryGetBool(query, nameof(GamePlay.ComputerStarts), out var computerStarts))
-            GamePlay.ComputerStarts = computerStarts;
-
         PlayAgainClick();
     }
 
@@ -56,18 +89,102 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
     /// <summary>
     /// Make the game play object available internally for unit testing
     /// </summary>
-    public GamePlay GamePlay
+    public IGamePlay GamePlay
     {
-        get
+        get => _gamePlay;
+    }
+
+    /// <summary>
+    /// Handle the event when the computer has made its choice
+    /// </summary>
+    /// <param name="sender">Reference to the GamePlay class</param>
+    /// <param name="e">The event argument that contains the square position on the choice made.</param>
+    private void GamePlay_ComputerPlayed(object sender, ComputerChoiceEventArgs e)
+    {
+        switch (e.Square)
         {
-            if (_gamePlay is null)
-            {
-                _gamePlay = new GamePlay(this);
-                OnPropertyChanged(nameof(GamePlay));
-            }
-            return _gamePlay;
+            case SquarePosition.LeftTop:
+                {
+                    LeftTopChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.CenterTop:
+                {
+                    CenterTopChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.RightTop:
+                {
+                    RightTopChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.LeftMiddle:
+                {
+                    LeftMiddleChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.CenterMiddle:
+                {
+                    CenterMiddleChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.RightMiddle:
+                {
+                    RightMiddleChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.LeftBottom:
+                {
+                    LeftBottomChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.CenterBottom:
+                {
+                    CenterBottomChoice = e.Choice;
+                    break;
+                }
+            case SquarePosition.RightBottom:
+                {
+                    RightBottomChoice = e.Choice;
+                    break;
+                }
+
+            case SquarePosition.Invalid:
+                throw new ArgumentException("Invalid square position selected");
+
         }
-        set => _gamePlay = value;
+    }
+
+    private void GamePlay_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+
+            case nameof(IGamePlay.ComputerStarts):
+                RunOnMainThread(() => OnPropertyChanged(e.PropertyName));
+                break;
+
+            case nameof(IGamePlay.GameOver):
+                RunOnMainThread(() => OnPropertyChanged(e.PropertyName));
+                break;
+
+            case nameof(IGamePlay.HasWinner):
+                RunOnMainThread(() => UpdateWinningLine());
+                break;
+
+            case nameof(IGamePlay.Instructions):
+                RunOnMainThread(() => OnPropertyChanged(e.PropertyName));
+                break;
+
+            case nameof(IGamePlay.IsX):
+                RunOnMainThread(() => OnPropertyChanged(e.PropertyName));
+                break;
+
+            case nameof(IGamePlay.TwoPlayer):
+                RunOnMainThread(() => OnPropertyChanged(e.PropertyName));
+                break;
+
+        }
     }
 
     #endregion Properties
@@ -120,9 +237,7 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
     [RelayCommand]
     public void CenterBottomClick()
     {
-        var value = SetSquare();
-        if (CenterBottomChoice != value)
-            CenterBottomChoice = value;
+        CenterBottomChoice = IsSquareXorO();
     }
 
     /// <summary>
@@ -131,9 +246,7 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
     [RelayCommand]
     public void CenterMiddleClick()
     {
-        var value = SetSquare();
-        if (CenterMiddleChoice != value)
-            CenterMiddleChoice = value;
+        CenterMiddleChoice = IsSquareXorO();
     }
 
     /// <summary>
@@ -142,9 +255,7 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
     [RelayCommand]
     public void CenterTopClick()
     {
-        var value = SetSquare();
-        if (CenterTopChoice != value)
-            CenterTopChoice = value;
+        CenterTopChoice = IsSquareXorO();
     }
 
     /// <summary>
@@ -153,9 +264,7 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
     [RelayCommand]
     public void LeftBottomClick()
     {
-        var value = SetSquare();
-        if (LeftBottomChoice != value)
-            LeftBottomChoice = value;
+        LeftBottomChoice = IsSquareXorO();
     }
 
     /// <summary>
@@ -164,9 +273,7 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
     [RelayCommand]
     public void LeftMiddleClick()
     {
-        var value = SetSquare();
-        if (LeftMiddleChoice != value)
-            LeftMiddleChoice = value;
+        LeftMiddleChoice = IsSquareXorO();
     }
 
     /// <summary>
@@ -175,9 +282,7 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
     [RelayCommand]
     public void LeftTopClick()
     {
-        var value = SetSquare();
-        if (LeftTopChoice != value)
-            LeftTopChoice = value;
+        LeftTopChoice = IsSquareXorO();
     }
 
     /// <summary>
@@ -186,9 +291,7 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
     [RelayCommand]
     public void RightBottomClick()
     {
-        var value = SetSquare();
-        if (RightBottomChoice != value)
-            RightBottomChoice = value;
+        RightBottomChoice = IsSquareXorO();
     }
 
     /// <summary>
@@ -197,9 +300,7 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
     [RelayCommand]
     public void RightMiddleClick()
     {
-        var value = SetSquare();
-        if (RightMiddleChoice != value)
-            RightMiddleChoice = value;
+        RightMiddleChoice = IsSquareXorO();
     }
 
     /// <summary>
@@ -208,12 +309,10 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
     [RelayCommand]
     public void RightTopClick()
     {
-        var value = SetSquare();
-        if (RightTopChoice != value)
-            RightTopChoice = value;
+        RightTopChoice = IsSquareXorO();
     }
 
-    private XorO SetSquare()
+    private XorO IsSquareXorO()
     {
         return GamePlay.IsX ? XorO.X_Visible : XorO.O_Visible;
     }
@@ -376,10 +475,10 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
             isMainThread = true;
         }
 
-        if (isMainThread)
-            action();
-        else
+        if (!isMainThread)
             MainThread.BeginInvokeOnMainThread(action);
+        else
+            action();
     }
 
     /// <summary>
