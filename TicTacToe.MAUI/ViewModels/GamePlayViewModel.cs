@@ -486,6 +486,7 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
     /// </summary>
     public void UpdateWinningLine()
     {
+        if (GamePlay == null) return;
         if (GamePlay.WinningSelection == -1) return;
 
         var choiceSize = GridSize / 3;
