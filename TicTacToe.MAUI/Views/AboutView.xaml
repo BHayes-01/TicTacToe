@@ -8,10 +8,10 @@
     <ScrollView
         x:Name="scrViewAbout"
         Margin="0"
-        HorizontalOptions="FillAndExpand"
-        VerticalOptions="FillAndExpand"
+        HorizontalOptions="Fill"
+        VerticalOptions="Fill"
         VerticalScrollBarVisibility="Default">
-        <VerticalStackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <VerticalStackLayout HorizontalOptions="Fill" VerticalOptions="Fill">
 
             <Label
                 x:Name="lblTicTacToe"
@@ -34,7 +34,7 @@
                 Margin="0,6"
                 FontSize="16"
                 HorizontalOptions="Center"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
+                SemanticProperties.Description="Welcome to dot net Multi platform App UI"
                 SemanticProperties.HeadingLevel="Level2"
                 Text="A .NET Multi-platform App UI" />
 
@@ -43,21 +43,21 @@
                 Margin="0,2"
                 FontSize="14"
                 HorizontalOptions="Center"
-                Text="{Binding Author, StringFormat='Created By: {0}'}" />
+                Text="{Binding Author, StringFormat='Created By: {0}', Mode=OneWay}" />
 
             <Label
                 x:Name="lblVersion"
                 Margin="0,2"
                 FontSize="14"
                 HorizontalOptions="Center"
-                Text="{Binding Version, StringFormat='Version: {0}'}" />
+                Text="{Binding Version, StringFormat='Version: {0}', Mode=OneWay}" />
 
             <Label
                 x:Name="lblPublishDate"
                 Margin="0,2"
                 FontSize="14"
                 HorizontalOptions="Center"
-                Text="{Binding PublishDateTime, StringFormat='Date Published: {0:MMMM d, yyyy}'}" />
+                Text="{Binding PublishDateTime, StringFormat='Date Published: {0:MMMM d, yyyy}', Mode=OneWay}" />
 
             <Label
                 x:Name="lblLicense"

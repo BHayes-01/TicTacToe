@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using TicTacToe.Enums;
+﻿using TicTacToe.Enums;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TicTacToe.Business.Business;

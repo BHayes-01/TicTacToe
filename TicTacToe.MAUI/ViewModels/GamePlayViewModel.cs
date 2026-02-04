@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
-using System.Web;
 using TicTacToe.Business.Business;
 using TicTacToe.Enums;
 
@@ -30,19 +29,6 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
         GamePlay.ComputerPlayed += GamePlay_ComputerPlayed;
     }
 
-    ~GamePlayViewModel()
-    {
-        DisposeEvents();
-    }
-
-    internal GamePlayViewModel()
-    {
-        _gamePlay = new GamePlay();
-        OnPropertyChanged(nameof(GamePlay));
-        GamePlay.PropertyChanged += GamePlay_PropertyChanged;
-        GamePlay.ComputerPlayed += GamePlay_ComputerPlayed;
-    }
-
     public void Dispose()
     {
         DisposeEvents();
@@ -58,6 +44,15 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
         _gamePlay = null;
     }
 
+
+    internal GamePlayViewModel()
+    {
+        _gamePlay = new GamePlay();
+        OnPropertyChanged(nameof(GamePlay));
+        GamePlay.PropertyChanged += GamePlay_PropertyChanged;
+        GamePlay.ComputerPlayed += GamePlay_ComputerPlayed;
+    }
+
     #endregion Constructor
 
     #region IQueryAttributable
@@ -71,17 +66,6 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
         PlayAgainClick();
     }
 
-    private static bool TryGetBool(IDictionary<string, object> query, string key, out bool value)
-    {
-        value = false;
-
-        if (!query.TryGetValue(key, out var raw) || raw is null)
-            return false;
-
-        var decoded = HttpUtility.UrlDecode(raw.ToString());
-        return bool.TryParse(decoded, out value);
-    }
-
     #endregion IQueryAttributable
 
     #region Properties
@@ -93,6 +77,10 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
     {
         get => _gamePlay;
     }
+
+    #endregion Properties
+
+    #region Handle Events
 
     /// <summary>
     /// Handle the event when the computer has made its choice
@@ -187,7 +175,7 @@ public partial class GamePlayViewModel : ViewModelSupport, IQueryAttributable, I
         }
     }
 
-    #endregion Properties
+    #endregion Handle Events
 
     #region Auto Properties From Fields
 

@@ -9,6 +9,19 @@ public partial class App : Application
     {
         InitializeComponent();
 
+        // 1. Catches exceptions on the main thread (Synchronous)
+        AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+        {
+            LogException(e.ExceptionObject as Exception, "AppDomain");
+        };
+
+        // 2. Catches exceptions in background tasks (Asynchronous)
+        TaskScheduler.UnobservedTaskException += (s, e) =>
+        {
+            LogException(e.Exception, "TaskScheduler");
+            // e.SetObserved(); // Optional: prevents the app from crashing in some scenarios
+        };
+
         MainPage = new AppShell();
     }
 
@@ -33,6 +46,12 @@ public partial class App : Application
 
         // 2. Perform other cleanup (close DB connections, stop timers, etc.)
         //Debug.WriteLine("App is disposing resources...");
+    }
+
+    private void LogException(Exception ex, string source)
+    {
+        // Use your logger of choice (e.g., Serilog, AppCenter, or Sentry)
+        Console.WriteLine($"Critical Error from {source}: {ex?.Message}");
     }
 
 }
